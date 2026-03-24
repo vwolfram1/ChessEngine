@@ -56,6 +56,8 @@ class UCIHandler:
         elif cmd == "ucinewgame":
             self._ensure_engine()
             self._engine.smp.shared_tt.clear()
+            if self._engine._csearch:
+                self._engine._csearch.new_game()
         elif cmd == "setoption":
             self._setoption(parts[1:])
         elif cmd == "position":
@@ -171,7 +173,7 @@ class UCIHandler:
                     mate_in = -mate_in
                 mate = mate_in
             score_str = (f"mate {mate}" if mate is not None else f"cp {score}")
-            pv_str    = " ".join(m.uci() for m in pv)
+            pv_str    = " ".join(m.uci() if hasattr(m, 'uci') else str(m) for m in pv)
             elapsed_ms = int(elapsed * 1000)
             print(
                 f"info depth {depth} seldepth {seldepth} score {score_str} "

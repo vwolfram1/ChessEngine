@@ -1,5 +1,7 @@
 """
 Main engine class. Exposes a clean API for the UI and UCI protocol.
+Uses the Cython bitboard engine (CSearch) when available for maximum NPS,
+falling back to the pure-Python SMP engine otherwise.
 """
 
 import chess
@@ -13,6 +15,12 @@ from .search import SearchState, SMPSearch, search
 from .evaluation import evaluate as static_eval
 from .neural_net import get_evaluator
 
+try:
+    from .cx import CSearch, CYTHON_AVAILABLE
+except ImportError:
+    CSearch = None
+    CYTHON_AVAILABLE = False
+
 BOOK_PATH = os.path.join(os.path.dirname(__file__), "data", "komodo.bin")
 TB_PATH   = os.path.join(os.path.dirname(__file__), "data", "syzygy")
 
@@ -25,6 +33,15 @@ class ChessEngine:
         self._lock        = threading.Lock()
         self._search_thread: Optional[threading.Thread] = None
         self._ss: Optional[SearchState] = None
+
+        # Cython bitboard engine (primary search when available)
+        self._csearch: Optional["CSearch"] = None
+        if CYTHON_AVAILABLE:
+            try:
+                self._csearch = CSearch(tt_mb)
+                print("[Engine] Cython bitboard engine active (~1M NPS)", file=sys.stderr)
+            except Exception as e:
+                print(f"[Engine] CSearch init failed: {e}", file=sys.stderr)
 
         # Syzygy tablebases
         self._tb_reader = None
@@ -56,6 +73,8 @@ class ChessEngine:
             self.board = chess.Board(fen)
             for uci in (moves or []):
                 self.board.push_uci(uci)
+            if self._csearch:
+                self._csearch.set_position(fen, list(moves or []))
 
     def get_fen(self) -> str:
         return self.board.fen()
@@ -138,6 +157,48 @@ class ChessEngine:
         self.stop_search()
         board_copy = self.board.copy()
 
+        if self._csearch:
+            def _run_cx():
+                try:
+                    # Book / tablebase checks still use python-chess
+                    book_move = self._try_book(board_copy)
+                    if book_move:
+                        if on_done:
+                            on_done(book_move.uci(), 0, [book_move.uci()])
+                        return
+                    tb_move = self._try_tablebase(board_copy)
+                    if tb_move:
+                        if on_done:
+                            on_done(tb_move.uci(), 0, [tb_move.uci()])
+                        return
+
+                    def _cb(depth, seldepth, score, move_uci, nodes, nps, elapsed):
+                        if on_depth:
+                            # Adapt to the (depth,seldepth,score,best_move,pv,nodes,elapsed,nps) signature
+                            on_depth(depth, seldepth, score, move_uci,
+                                     [move_uci], nodes, elapsed, nps)
+
+                    best_uci, score, depth = self._csearch.search(
+                        time_limit, max_depth=depth_limit, callback=_cb
+                    )
+                    if on_done:
+                        if not best_uci or best_uci == "0000":
+                            legal = list(board_copy.legal_moves)
+                            best_uci = legal[0].uci() if legal else "0000"
+                        on_done(best_uci, score, [best_uci])
+                except Exception as e:
+                    print(f"[Engine] CSearch error: {e}", file=sys.stderr, flush=True)
+                    import traceback
+                    traceback.print_exc(file=sys.stderr)
+                    if on_done:
+                        legal = list(board_copy.legal_moves)
+                        on_done(legal[0].uci() if legal else "0000", 0, [])
+
+            self._search_thread = threading.Thread(target=_run_cx, daemon=True)
+            self._search_thread.start()
+            return
+
+        # Python fallback
         def _run():
             try:
                 book_move = self._try_book(board_copy)
@@ -160,7 +221,6 @@ class ChessEngine:
                 )
                 if on_done:
                     pv_uci = [m.uci() for m in pv]
-                    # UCI requires bestmove always; fall back to first legal move
                     if not move:
                         legal = list(board_copy.legal_moves)
                         move = legal[0] if legal else None
@@ -180,6 +240,8 @@ class ChessEngine:
     def stop_search(self):
         if self._ss:
             self._ss.stopped = True
+        if self._csearch:
+            self._csearch.stop()
 
     # ------------------------------------------------------------------
     # Internal helpers
