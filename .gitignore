@@ -1,3 +1,7 @@
 *cpython-312.pyc
 ./engine/__pycache__/
 ./__pycache__/
+./engine/cx/build
+./engine/cx/cchess.cp312-win_amd64.py
+./engine/cx/build/lib.win-amd64-cpython-312/cchess.cp312-win_amd64.pyd
+./engine/cx/build/temp.win-amd64-cpython-312/Release/cchess.obj

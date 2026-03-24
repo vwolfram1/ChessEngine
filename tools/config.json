@@ -1,15 +1,15 @@
 {
     "resign": {
-        "move_count": 5,
-        "score": 700,
+        "move_count": 1,
+        "score": 0,
         "twosided": false,
-        "enabled": true
+        "enabled": false
     },
     "draw": {
-        "move_number": 60,
-        "move_count": 8,
-        "score": 10,
-        "enabled": true
+        "move_number": 0,
+        "move_count": 1,
+        "score": 0,
+        "enabled": false
     },
     "maxmoves": {
         "move_count": 1,
@@ -24,15 +24,15 @@
     "opening": {
         "file": "openings.epd",
         "format": 0,
-        "order": 1,
+        "order": 0,
         "plies": -1,
-        "start": 1
+        "start": 5
     },
     "pgn": {
         "additional_lines_rgx": [],
         "event_name": "Fastchess Tournament",
         "site": "?",
-        "file": "games/nexus_vs_gochess_v3.pgn",
+        "file": "",
         "notation": 0,
         "append_file": true,
         "track_nodes": false,
@@ -60,7 +60,7 @@
     },
     "config_name": "config.json",
     "output": 0,
-    "seed": 4137755910069911740,
+    "seed": 12679292036464084638,
     "variant": 0,
     "type": 0,
     "gauntlet_seeds": 1,
@@ -69,7 +69,7 @@
     "wait": 0,
     "autosaveinterval": 20,
     "games": 2,
-    "rounds": 2,
+    "rounds": 8,
     "concurrency": 1,
     "force_concurrency": false,
     "recover": false,
@@ -93,23 +93,14 @@
             "cmd": "c:/Users/vinni/OneDrive/Documents/Projects/ChessEngine/nexuschess.bat",
             "args": "",
             "restart": false,
-            "options": [
-                [
-                    "Threads",
-                    "1"
-                ],
-                [
-                    "Hash",
-                    "256"
-                ]
-            ],
+            "options": [],
             "limit": {
                 "tc": {
-                    "increment": 0,
-                    "fixed_time": 5000,
-                    "time": 0,
+                    "increment": 100,
+                    "fixed_time": 0,
+                    "time": 10000,
                     "moves": 0,
-                    "timemargin": 5000
+                    "timemargin": 0
                 },
                 "nodes": 0,
                 "plies": 0
@@ -117,17 +108,26 @@
             "variant": 0
         },
         {
-            "name": "GoChess",
+            "name": "SF2000b",
             "dir": "",
-            "cmd": "c:/Users/vinni/OneDrive/Documents/Projects/go-chess/go-api/go-chess.exe",
-            "args": "uci",
+            "cmd": "./stockfish/stockfish-windows-x86-64-avx2.exe",
+            "args": "",
             "restart": false,
-            "options": [],
+            "options": [
+                [
+                    "UCI_LimitStrength",
+                    "true"
+                ],
+                [
+                    "UCI_Elo",
+                    "2000"
+                ]
+            ],
             "limit": {
                 "tc": {
-                    "increment": 1000,
+                    "increment": 100,
                     "fixed_time": 0,
-                    "time": 60000,
+                    "time": 10000,
                     "moves": 0,
                     "timemargin": 0
                 },
@@ -138,16 +138,16 @@
         }
     ],
     "stats": {
-        "NexusChess vs GoChess": {
-            "wins": 0,
-            "losses": 3,
+        "NexusChess vs SF2000b": {
+            "wins": 11,
+            "losses": 4,
             "draws": 1,
-            "penta_WW": 0,
-            "penta_WD": 0,
-            "penta_WL": 0,
+            "penta_WW": 3,
+            "penta_WD": 1,
+            "penta_WL": 4,
             "penta_DD": 0,
-            "penta_LD": 1,
-            "penta_LL": 1
+            "penta_LD": 0,
+            "penta_LL": 0
         }
     }
 }

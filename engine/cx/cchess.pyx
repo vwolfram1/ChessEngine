@@ -12,6 +12,7 @@ from libc.stdint  cimport uint64_t, uint32_t, int32_t, int16_t, uint8_t
 from libc.stdlib  cimport malloc, free, rand, srand
 from libc.string  cimport memset, memcpy
 from libc.time    cimport time as c_time
+from libc.math    cimport log as c_log
 
 import time as pytime
 import sys
@@ -126,6 +127,30 @@ cdef int MG_VAL[6]    # piece material values (midgame)
 cdef int EG_VAL[6]    # piece material values (endgame)
 cdef int PHASE_WT[6]  # phase weight per piece
 
+# Pawn-structure evaluation tables (initialised in _init_tables)
+cdef uint64_t FILE_MASK_C[8]       # bitboard for each file 0-7
+cdef uint64_t ADJ_FILE_MASK[8]     # neighbouring files for each file
+cdef uint64_t PASSED_MASK[2][64]   # squares ahead on same+adj files per side
+cdef int MG_PASSED[8]              # passed-pawn midgame bonus by rank
+cdef int EG_PASSED[8]              # passed-pawn endgame bonus by rank
+
+# LMR lookup table: [depth][move_index] -> reduction (log-based)
+cdef int LMR_TABLE[128][64]
+
+# Continuation history: [prev_piece*64+prev_to][piece*64+to]
+# 384 = 6 piece types * 64 squares
+cdef int CONT_HIST[384][384]
+
+# ── Magic bitboard tables ─────────────────────────────────────────────────────
+cdef uint64_t  ROOK_MASK[64]       # relevant occupancy mask per square
+cdef uint64_t  BISHOP_MASK[64]
+cdef uint64_t  ROOK_MAGIC[64]      # magic multipliers
+cdef uint64_t  BISHOP_MAGIC[64]
+cdef int       ROOK_SHIFT[64]      # shift = 64 - popcount(mask)
+cdef int       BISHOP_SHIFT[64]
+cdef uint64_t* ROOK_TABLE[64]      # per-square attack tables (heap allocated)
+cdef uint64_t* BISHOP_TABLE[64]
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Table initialisation (called once at module load)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -136,9 +161,141 @@ cdef uint64_t _xorshift64(uint64_t* state) nogil:
     state[0] ^= state[0] << 17
     return state[0]
 
+# ── Magic bitboard helpers ────────────────────────────────────────────────────
+
+cdef uint64_t _slider_attacks_slow(int sq, uint64_t occ, bint is_rook) nogil:
+    """Classical ray-scan attack generator used only during magic init."""
+    cdef uint64_t attacks = 0
+    cdef int s, f = sq & 7, r = sq >> 3, sf, sr
+    cdef int[4] dr_rook   = [1, -1, 0, 0]
+    cdef int[4] df_rook   = [0, 0, 1, -1]
+    cdef int[4] dr_bishop = [1, 1, -1, -1]
+    cdef int[4] df_bishop = [1, -1, 1, -1]
+    cdef int* dr
+    cdef int* df
+    if is_rook: dr = dr_rook;   df = df_rook
+    else:       dr = dr_bishop; df = df_bishop
+    cdef int d
+    for d in range(4):
+        sf = f + df[d]; sr = r + dr[d]
+        while 0 <= sf < 8 and 0 <= sr < 8:
+            s = sr * 8 + sf
+            attacks |= (<uint64_t>1 << s)
+            if occ & (<uint64_t>1 << s): break
+            sf += df[d]; sr += dr[d]
+    return attacks
+
+cdef uint64_t _slider_mask(int sq, bint is_rook) nogil:
+    """Relevant occupancy mask (excludes board edges where blockers don't matter)."""
+    cdef uint64_t attacks = _slider_attacks_slow(sq, 0, is_rook)
+    # Remove edge squares (they are always included in attacks regardless of occupancy)
+    cdef uint64_t edges = ((<uint64_t>0xFF) | (<uint64_t>0xFF) << 56 |
+                           (<uint64_t>0x0101010101010101) | (<uint64_t>0x8080808080808080))
+    # Don't remove edges on the same rank/file/diagonal as the slider itself
+    cdef uint64_t sq_rank = (<uint64_t>0xFF) << ((sq >> 3) * 8)
+    cdef uint64_t sq_file = (<uint64_t>0x0101010101010101) << (sq & 7)
+    if is_rook:
+        edges &= ~(sq_rank | sq_file)
+    else:
+        edges &= ~(<uint64_t>0)   # bishops: remove all edge squares
+    return attacks & ~edges & ~(<uint64_t>1 << sq)
+
+cdef uint64_t _carry_rippler_next(uint64_t sub, uint64_t mask) nogil:
+    """Next subset of mask via carry-rippler trick."""
+    return (sub - mask) & mask
+
+cdef bint _init_magic_for_sq(int sq, bint is_rook) nogil:
+    """Find magic number for one square. Returns True on success."""
+    cdef uint64_t mask = _slider_mask(sq, is_rook)
+    cdef int bits = 0
+    cdef uint64_t bb = mask
+    while bb: bits += 1; bb &= bb - 1   # popcount
+    cdef int shift = 64 - bits
+    cdef int size = 1 << bits
+
+    # Enumerate all occupancy subsets and their attacks
+    cdef uint64_t* occ_list = <uint64_t*>malloc(size * sizeof(uint64_t))
+    cdef uint64_t* ref_list = <uint64_t*>malloc(size * sizeof(uint64_t))
+    cdef int* used = <int*>malloc(size * sizeof(int))
+
+    cdef uint64_t sub = 0
+    cdef int n = 0
+    while True:
+        occ_list[n] = sub
+        ref_list[n] = _slider_attacks_slow(sq, sub, is_rook)
+        n += 1
+        sub = _carry_rippler_next(sub, mask)
+        if sub == 0: break
+
+    # Allocate attack table
+    cdef uint64_t* table = <uint64_t*>malloc(size * sizeof(uint64_t))
+
+    # PRNG seeds matching Stockfish's per-rank seeds for fast magic finding
+    # Seeds: rook ranks, bishop ranks
+    cdef uint64_t[8] seeds_rook   = [728, 10316, 55013, 32803, 12281, 15100, 16645, 255]
+    cdef uint64_t[8] seeds_bishop = [8977, 44560, 54343, 38998, 5731, 95205, 104912, 17020]
+    cdef int rank = sq >> 3
+    cdef uint64_t rng
+    if is_rook: rng = seeds_rook[rank]
+    else:       rng = seeds_bishop[rank]
+
+    cdef uint64_t magic
+    cdef int epoch = 0, cnt = 0, i, idx
+    cdef bint found = False
+
+    while not found:
+        # Generate sparse random number (few set bits near top — standard trick)
+        rng ^= rng << 13; rng ^= rng >> 7; rng ^= rng << 17
+        magic = rng
+        rng ^= rng << 13; rng ^= rng >> 7; rng ^= rng << 17
+        magic &= rng
+        rng ^= rng << 13; rng ^= rng >> 7; rng ^= rng << 17
+        magic &= rng
+
+        if magic == 0: continue
+
+        # Quick density check
+        if popcount((magic * mask) >> 56) < 6: continue
+
+        epoch += 1; cnt = 0
+        found = True
+        for i in range(n):
+            idx = <int>((occ_list[i] * magic) >> shift)
+            if used[idx] != epoch:
+                used[idx] = epoch
+                table[idx] = ref_list[i]
+                cnt += 1
+            elif table[idx] != ref_list[i]:
+                found = False
+                break
+
+    if is_rook:
+        ROOK_MASK[sq]  = mask
+        ROOK_MAGIC[sq] = magic
+        ROOK_SHIFT[sq] = shift
+        ROOK_TABLE[sq] = table
+    else:
+        BISHOP_MASK[sq]  = mask
+        BISHOP_MAGIC[sq] = magic
+        BISHOP_SHIFT[sq] = shift
+        BISHOP_TABLE[sq] = table
+
+    free(occ_list); free(ref_list); free(used)
+    return True
+
+cdef void _init_magic_tables():
+    """Compute magic bitboard tables for all 64 squares."""
+    for sq in range(64):
+        _init_magic_for_sq(sq, True)   # rook
+        _init_magic_for_sq(sq, False)  # bishop
+
 cdef void _init_tables():
-    cdef int sq, f, r, tsq, color
+    cdef int sq, f, r, tsq, color, rank
     cdef uint64_t bb, rng_state = 0xDEADF00DCAFEBABE
+    cdef uint64_t files, above, below
+
+    # ── magic bitboard tables ─────────────────────────────────────────────────
+    _init_magic_tables()
 
     # ── pawn attacks ──────────────────────────────────────────────────────────
     for sq in range(64):
@@ -198,6 +355,44 @@ cdef void _init_tables():
 
     # ── PST tables (PeSTO values) ─────────────────────────────────────────────
     _init_pst()
+
+    # ── pawn evaluation masks ─────────────────────────────────────────────────
+    for f in range(8):
+        FILE_MASK_C[f] = <uint64_t>0x0101010101010101 << f
+    for f in range(8):
+        ADJ_FILE_MASK[f] = 0
+        if f > 0: ADJ_FILE_MASK[f] |= FILE_MASK_C[f - 1]
+        if f < 7: ADJ_FILE_MASK[f] |= FILE_MASK_C[f + 1]
+    for sq in range(64):
+        rank = sq >> 3
+        f    = sq & 7
+        files = FILE_MASK_C[f] | ADJ_FILE_MASK[f]
+        above = <uint64_t>0
+        for r in range(rank + 1, 8):
+            above |= (<uint64_t>0xFF) << (r * 8)
+        PASSED_MASK[WHITE][sq] = files & above
+        below = <uint64_t>0
+        for r in range(0, rank):
+            below |= (<uint64_t>0xFF) << (r * 8)
+        PASSED_MASK[BLACK][sq] = files & below
+    # Passed-pawn bonus by rank (rank 0 = own back rank, 6 = one step from promoting)
+    MG_PASSED[0]=0;  MG_PASSED[1]=5;   MG_PASSED[2]=10;  MG_PASSED[3]=20
+    MG_PASSED[4]=35; MG_PASSED[5]=60;  MG_PASSED[6]=90;  MG_PASSED[7]=0
+    EG_PASSED[0]=0;  EG_PASSED[1]=10;  EG_PASSED[2]=20;  EG_PASSED[3]=40
+    EG_PASSED[4]=65; EG_PASSED[5]=100; EG_PASSED[6]=150; EG_PASSED[7]=0
+
+    # ── LMR table (log-based formula) ────────────────────────────────────────
+    cdef int d, m, lmr_val
+    for d in range(128):
+        for m in range(64):
+            if d == 0 or m == 0:
+                LMR_TABLE[d][m] = 0
+            else:
+                lmr_val = <int>(c_log(<double>d) * c_log(<double>m) / 2.25)
+                LMR_TABLE[d][m] = lmr_val if lmr_val > 0 else 0
+
+    # ── Continuation history (zero-initialised) ───────────────────────────────
+    memset(CONT_HIST, 0, sizeof(CONT_HIST))
 
 # ──  PeSTO piece-square tables  ──────────────────────────────────────────────
 # Stored rank-0 = rank 1 (a1 = index 0). White perspective = rank flipped for PST.
@@ -385,65 +580,10 @@ cdef inline uint64_t bit(int sq) nogil:
 # ─────────────────────────────────────────────────────────────────────────────
 
 cdef inline uint64_t rook_attacks(int sq, uint64_t occ) nogil:
-    cdef uint64_t attacks = 0, b
-    cdef int s
-    cdef int rank_start = (sq >> 3) << 3     # first square on rank
-    cdef int rank_end   = rank_start + 8     # one past last square on rank
-
-    # North (+8)
-    s = sq + 8
-    while s < 64:
-        attacks |= bit(s)
-        if occ & bit(s): break
-        s += 8
-    # South (-8)
-    s = sq - 8
-    while s >= 0:
-        attacks |= bit(s)
-        if occ & bit(s): break
-        s -= 8
-    # East (+1, stay on same rank)
-    s = sq + 1
-    while s < rank_end:
-        attacks |= bit(s)
-        if occ & bit(s): break
-        s += 1
-    # West (-1, stay on same rank)
-    s = sq - 1
-    while s >= rank_start:
-        attacks |= bit(s)
-        if occ & bit(s): break
-        s -= 1
-    return attacks
+    return ROOK_TABLE[sq][<int>((occ & ROOK_MASK[sq]) * ROOK_MAGIC[sq] >> ROOK_SHIFT[sq])]
 
 cdef inline uint64_t bishop_attacks(int sq, uint64_t occ) nogil:
-    cdef uint64_t attacks = 0
-    cdef int s, f = sq & 7, r = sq >> 3
-    # NE (+9)
-    s = sq + 9
-    while s < 64 and (s & 7) > (s - 9 & 7):
-        attacks |= bit(s)
-        if occ & bit(s): break
-        s += 9
-    # NW (+7)
-    s = sq + 7
-    while s < 64 and (s & 7) < (s - 7 & 7):
-        attacks |= bit(s)
-        if occ & bit(s): break
-        s += 7
-    # SE (-7)
-    s = sq - 7
-    while s >= 0 and (s & 7) > (s + 7 & 7):
-        attacks |= bit(s)
-        if occ & bit(s): break
-        s -= 7
-    # SW (-9)
-    s = sq - 9
-    while s >= 0 and (s & 7) < (s + 9 & 7):
-        attacks |= bit(s)
-        if occ & bit(s): break
-        s -= 9
-    return attacks
+    return BISHOP_TABLE[sq][<int>((occ & BISHOP_MASK[sq]) * BISHOP_MAGIC[sq] >> BISHOP_SHIFT[sq])]
 
 cdef inline uint64_t queen_attacks(int sq, uint64_t occ) nogil:
     return rook_attacks(sq, occ) | bishop_attacks(sq, occ)
@@ -984,7 +1124,7 @@ cdef int gen_pseudo_legal(CBoard* b, uint32_t* moves) nogil:
 
         # Castling (pseudo-legal; legality checked separately)
         if us == WHITE:
-            if (b.castling & W_KS) and not (occ & 0x60) and not (b.pieces[them][KING]):
+            if (b.castling & W_KS) and not (occ & 0x60):
                 # squares f1 (5) and g1 (6) must be empty (already checked via 0x60)
                 _add(moves, &n, 4, 6, MF_KS_CASTLE)
             if (b.castling & W_QS) and not (occ & 0xE):
@@ -1054,12 +1194,125 @@ cdef int gen_legal_captures(CBoard* b, uint32_t* moves) nogil:
 # Evaluation (tapered PST + basic structural bonuses)
 # ─────────────────────────────────────────────────────────────────────────────
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Evaluation helpers (all nogil)
+# ─────────────────────────────────────────────────────────────────────────────
+
+cdef inline int _eval_king_safety(CBoard* b, int side, int phase,
+                                   uint64_t our_pawns, uint64_t their_pawns) nogil:
+    """Penalty against `side`'s king. Returns positive value; caller subtracts for BLACK."""
+    if not b.pieces[side][KING]: return 0
+
+    cdef int king_sq   = lsb(b.pieces[side][KING])
+    cdef int king_file = king_sq & 7
+    cdef int king_rank = king_sq >> 3
+    cdef int enemy     = side ^ 1
+    cdef uint64_t occ  = b.all_occ
+    cdef uint64_t king_zone = KING_ATTACKS[king_sq] | (<uint64_t>1 << king_sq)
+    cdef int penalty = 0
+    cdef int f, sq, df, r1, r2, attack_weight, num_attackers
+    cdef uint64_t bb, fmask, shield_bb
+
+    # ── Pawn shield: only when king sits on its back two ranks ────────────────
+    if (side == WHITE and king_rank <= 1) or (side == BLACK and king_rank >= 6):
+        for df in range(-1, 2):
+            f = king_file + df
+            if f < 0 or f > 7: continue
+            fmask = FILE_MASK_C[f]
+
+            shield_bb = 0
+            if side == WHITE:
+                r1 = king_rank + 1; r2 = king_rank + 2
+                if r1 < 8: shield_bb  = fmask & (<uint64_t>0xFF << (r1 * 8))
+                if r2 < 8: shield_bb |= fmask & (<uint64_t>0xFF << (r2 * 8))
+            else:
+                r1 = king_rank - 1; r2 = king_rank - 2
+                if r1 >= 0: shield_bb  = fmask & (<uint64_t>0xFF << (r1 * 8))
+                if r2 >= 0: shield_bb |= fmask & (<uint64_t>0xFF << (r2 * 8))
+
+            if shield_bb:
+                if not (our_pawns & shield_bb):
+                    if not (their_pawns & shield_bb):
+                        penalty += 22   # open storm file – very dangerous
+                    else:
+                        penalty += 11   # enemy pawn already storming
+
+    # ── Piece pressure on king zone ───────────────────────────────────────────
+    attack_weight = 0; num_attackers = 0
+
+    bb = b.pieces[enemy][KNIGHT]
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        if KNIGHT_ATTACKS[sq] & king_zone:
+            attack_weight += 20; num_attackers += 1
+
+    bb = b.pieces[enemy][BISHOP]
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        if bishop_attacks(sq, occ) & king_zone:
+            attack_weight += 20; num_attackers += 1
+
+    bb = b.pieces[enemy][ROOK]
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        if rook_attacks(sq, occ) & king_zone:
+            attack_weight += 40; num_attackers += 1
+
+    bb = b.pieces[enemy][QUEEN]
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        if queen_attacks(sq, occ) & king_zone:
+            attack_weight += 80; num_attackers += 1
+
+    # Two or more attackers make the danger multiply
+    if num_attackers == 1:
+        penalty += attack_weight // 4
+    elif num_attackers == 2:
+        penalty += attack_weight * 3 // 4
+    elif num_attackers >= 3:
+        penalty += attack_weight * (num_attackers - 1)
+
+    # Scale to zero in pure endgame
+    return penalty * phase // 24
+
+
+cdef inline int _eval_mobility(CBoard* b, int side) nogil:
+    """Mobility bonus for `side` – cp per reachable square per piece type."""
+    cdef uint64_t occ = b.all_occ
+    cdef uint64_t own = b.occ[side]
+    cdef uint64_t bb
+    cdef int sq, bonus = 0
+
+    bb = b.pieces[side][KNIGHT]
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        bonus += popcount(KNIGHT_ATTACKS[sq] & ~own) * 4
+
+    bb = b.pieces[side][BISHOP]
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        bonus += popcount(bishop_attacks(sq, occ) & ~own) * 3
+
+    bb = b.pieces[side][ROOK]
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        bonus += popcount(rook_attacks(sq, occ) & ~own) * 2
+
+    bb = b.pieces[side][QUEEN]
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        bonus += popcount(queen_attacks(sq, occ) & ~own) * 1
+
+    return bonus
+
+
 cdef int c_evaluate(CBoard* b) nogil:
     """Returns centipawns from the perspective of the side to move."""
     cdef int mg_w = 0, eg_w = 0, mg_b = 0, eg_b = 0
     cdef int phase = 0
-    cdef uint64_t bb
-    cdef int sq, pst_sq
+    cdef uint64_t bb, wp, bp, all_pawns
+    cdef int sq, pst_sq, f, rank, cnt, bonus
+    cdef int mg_score, eg_score, score
 
     for pt in range(6):
         # White pieces
@@ -1080,13 +1333,109 @@ cdef int c_evaluate(CBoard* b) nogil:
             phase += PHASE_WT[pt]
 
     if phase > 24: phase = 24
-    cdef int mg_score = mg_w - mg_b
-    cdef int eg_score = eg_w - eg_b
-    cdef int score = (mg_score * phase + eg_score * (24 - phase)) // 24
+    mg_score = mg_w - mg_b
+    eg_score = eg_w - eg_b
+    score = (mg_score * phase + eg_score * (24 - phase)) // 24
 
     # Bishop pair bonus
     if popcount(b.pieces[WHITE][BISHOP]) >= 2: score += 40 * phase // 24 + 60 * (24 - phase) // 24
     if popcount(b.pieces[BLACK][BISHOP]) >= 2: score -= 40 * phase // 24 + 60 * (24 - phase) // 24
+
+    wp = b.pieces[WHITE][PAWN]
+    bp = b.pieces[BLACK][PAWN]
+    all_pawns = wp | bp
+
+    # ── Doubled pawns: -10 cp per extra pawn on same file ─────────────────
+    for f in range(8):
+        cnt = popcount(wp & FILE_MASK_C[f])
+        if cnt >= 2: score -= (cnt - 1) * 10
+        cnt = popcount(bp & FILE_MASK_C[f])
+        if cnt >= 2: score += (cnt - 1) * 10
+
+    # ── Isolated pawns: -15 cp per pawn with no friendly neighbour file ───
+    for f in range(8):
+        if wp & FILE_MASK_C[f]:
+            if not (wp & ADJ_FILE_MASK[f]):
+                score -= 15 * popcount(wp & FILE_MASK_C[f])
+        if bp & FILE_MASK_C[f]:
+            if not (bp & ADJ_FILE_MASK[f]):
+                score += 15 * popcount(bp & FILE_MASK_C[f])
+
+    # ── Passed pawns: tapered bonus by advancement rank ───────────────────
+    bb = wp
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        if not (bp & PASSED_MASK[WHITE][sq]):
+            rank  = sq >> 3
+            bonus = (MG_PASSED[rank] * phase + EG_PASSED[rank] * (24 - phase)) // 24
+            score += bonus
+    bb = bp
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        if not (wp & PASSED_MASK[BLACK][sq]):
+            rank  = 7 - (sq >> 3)          # flip: rank 7 = black's most advanced
+            bonus = (MG_PASSED[rank] * phase + EG_PASSED[rank] * (24 - phase)) // 24
+            score -= bonus
+
+    # ── Rook on open / semi-open file ─────────────────────────────────────
+    bb = b.pieces[WHITE][ROOK]
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        f = sq & 7
+        if not (all_pawns & FILE_MASK_C[f]):    score += 25
+        elif not (wp & FILE_MASK_C[f]):          score += 12
+    bb = b.pieces[BLACK][ROOK]
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        f = sq & 7
+        if not (all_pawns & FILE_MASK_C[f]):    score -= 25
+        elif not (bp & FILE_MASK_C[f]):          score -= 12
+
+    # ── Rook on 7th rank ──────────────────────────────────────────────────
+    # Bonus when enemy king is on the back rank or enemy pawns remain on 7th.
+    # White rooks on rank 7 (sq>>3 == 6, squares 48-55)
+    cdef uint64_t rank7_w = <uint64_t>0x00FF000000000000   # rank 7
+    cdef uint64_t rank8_w = <uint64_t>0xFF00000000000000   # rank 8
+    cdef uint64_t rank2_b = <uint64_t>0x000000000000FF00   # rank 2
+    cdef uint64_t rank1_b = <uint64_t>0x00000000000000FF   # rank 1
+    bb = b.pieces[WHITE][ROOK]
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        if (sq >> 3) == 6:
+            if (bp & rank7_w) or (b.pieces[BLACK][KING] & rank8_w):
+                score += 30
+    bb = b.pieces[BLACK][ROOK]
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        if (sq >> 3) == 1:
+            if (wp & rank2_b) or (b.pieces[WHITE][KING] & rank1_b):
+                score -= 30
+
+    # ── Knight outposts ───────────────────────────────────────────────────
+    # A knight is on an outpost when:
+    #   1. Protected by a friendly pawn  (PAWN_ATTACKS[opp][sq] & own_pawns)
+    #   2. Cannot be attacked by an enemy pawn (PAWN_ATTACKS[own][sq] & enemy_pawns == 0)
+    #   3. In or past the middle of the board (rank 4+ for white, rank 5- for black)
+    bb = b.pieces[WHITE][KNIGHT]
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        if (sq >> 3) >= 3:                          # rank 4 or further for white
+            if (PAWN_ATTACKS[BLACK][sq] & wp) and not (PAWN_ATTACKS[WHITE][sq] & bp):
+                score += 25
+    bb = b.pieces[BLACK][KNIGHT]
+    while bb:
+        sq = lsb(bb); bb &= bb - 1
+        if (sq >> 3) <= 4:                          # rank 5 or further for black
+            if (PAWN_ATTACKS[WHITE][sq] & bp) and not (PAWN_ATTACKS[BLACK][sq] & wp):
+                score -= 25
+
+    # ── King safety ───────────────────────────────────────────────────────
+    score -= _eval_king_safety(b, WHITE, phase, wp, bp)
+    score += _eval_king_safety(b, BLACK, phase, wp, bp)
+
+    # ── Piece mobility ────────────────────────────────────────────────────
+    score += _eval_mobility(b, WHITE)
+    score -= _eval_mobility(b, BLACK)
 
     return score if b.stm == WHITE else -score
 
@@ -1156,6 +1505,23 @@ cdef class TTable:
         else:
             out_score[0] = INF + 1
 
+    cdef bint probe_for_singular(self, uint64_t key, int min_depth,
+                                  int* out_score, uint32_t* out_move,
+                                  int* out_bound, int ply) nogil:
+        """Returns True if there's a TT entry with depth >= min_depth (not upper-bound).
+        Fills raw adjusted score, move, and bound. Used for singular extension."""
+        cdef int idx = <int>(key & self._mask)
+        cdef TTEntry* e = &self._data[idx]
+        if e.key != key or e.depth < min_depth:
+            return False
+        cdef int s = e.score
+        if s >  MATE_LOWER: s -= ply
+        if s < -MATE_LOWER: s += ply
+        out_score[0] = s
+        out_move[0]  = e.move
+        out_bound[0] = e.bound
+        return True
+
     cdef void increment_age(self) nogil:
         self._age = (self._age + 1) & 0xFF
 
@@ -1185,12 +1551,12 @@ cdef void _init_mvvlva():
 
 cdef int _score_move(CBoard* b, uint32_t mv, uint32_t tt_move,
                       int killers0, int killers1,
-                      int* history, int ply) nogil:
+                      int* history, int prev_piece_to) nogil:
     """Score a move for ordering (higher = search first)."""
     cdef int flags = move_flags(mv)
     cdef int frm   = move_from(mv)
     cdef int to    = move_to(mv)
-    cdef int vict_pt, att_pt, pt
+    cdef int vict_pt, att_pt, pt, moving_pt, cont_bonus
 
     if mv == tt_move: return 10000000
 
@@ -1209,8 +1575,16 @@ cdef int _score_move(CBoard* b, uint32_t mv, uint32_t tt_move,
     if mv == <uint32_t>killers0: return 900000
     if mv == <uint32_t>killers1: return 800000
 
-    # History (simple flat array indexed by from*64+to)
-    return history[frm * 64 + to]
+    # Find moving piece type for continuation history
+    moving_pt = NO_PT
+    for pt in range(6):
+        if b.pieces[b.stm][pt] & bit(frm): moving_pt = pt; break
+
+    cont_bonus = 0
+    if prev_piece_to >= 0 and moving_pt != NO_PT:
+        cont_bonus = CONT_HIST[prev_piece_to][moving_pt * 64 + to]
+
+    return history[frm * 64 + to] + cont_bonus
 
 cdef void _sort_moves(uint32_t* moves, int n, int* scores) noexcept nogil:
     """Insertion sort by descending score (small n, so fine)."""
@@ -1232,13 +1606,14 @@ cdef void _sort_moves(uint32_t* moves, int n, int* scores) noexcept nogil:
 
 cdef struct SearchState:
     int  killers[MAX_PLY][2]   # killer moves per ply
-    int  history[64*64]        # history heuristic [from*64+to]
+    int  history[64*64]        # butterfly history [from*64+to]
     int  nodes
     int  seldepth
     bint stopped
     double start_time
     double time_limit
     int  static_evals[MAX_PLY]
+    int  piece_to[MAX_PLY]     # piece*64+to of move played at each ply (for cont. history)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1256,16 +1631,24 @@ cdef int qsearch(CBoard* b, int alpha, int beta, int ply, SearchState* ss,
 
     cdef int stand_pat = c_evaluate(b)
     if stand_pat >= beta: return stand_pat
-    if stand_pat + 200 < alpha: return alpha   # delta pruning
     if alpha < stand_pat: alpha = stand_pat
 
     cdef uint32_t caps[128]
     cdef int ncaps = gen_legal_captures(b, caps)
     cdef int scores[128]
-    cdef int i, score
+    cdef int i, score, qdelta
 
+    # Dynamic delta pruning: use queen/rook value so we never prune positions
+    # where a high-value capture could flip the evaluation (flat 200 was too small)
+    qdelta = 200
+    if b.pieces[b.stm ^ 1][QUEEN]: qdelta = 1100
+    elif b.pieces[b.stm ^ 1][ROOK]: qdelta = 600
+    elif b.pieces[b.stm ^ 1][BISHOP] | b.pieces[b.stm ^ 1][KNIGHT]: qdelta = 400
+    if stand_pat + qdelta < alpha: return alpha
+
+    cdef int prev_pt = ss.piece_to[ply - 1] if ply > 0 else -1
     for i in range(ncaps):
-        scores[i] = _score_move(b, caps[i], 0, 0, 0, ss.history, ply)
+        scores[i] = _score_move(b, caps[i], 0, 0, 0, ss.history, prev_pt)
     _sort_moves(caps, ncaps, scores)
 
     for i in range(ncaps):
@@ -1287,11 +1670,14 @@ cdef int negamax(CBoard* b, int depth, int alpha, int beta, int ply,
                  SearchState* ss, TTable tt, bint do_null):
     # All cdef declarations at function scope (Cython requirement)
     cdef int tt_score, static_eval, null_score, razor_score, nm, score
-    cdef int best_score, bound, quiet_count, reduction, R, old_ep, hkey, i, j
-    cdef uint32_t tt_move, best_move
+    cdef int best_score, bound, quiet_count, reduction, R, old_ep, hkey, i, j, rep_count
+    cdef int sing_score, sing_bound, moving_pt, pt, prev_pt, cont_key, lmr_idx
+    cdef uint32_t tt_move, best_move, sing_move
     cdef uint32_t moves[256]
     cdef int move_scores[256]
-    cdef bint in_check, improving, has_pieces, f_prune, is_cap, is_quiet
+    cdef bint in_check, improving, has_pieces, f_prune, is_cap, is_quiet, is_singular
+    cdef bint pv_node = (beta - alpha > 1)
+    cdef int extension
 
     ss.nodes += 1
     if (ss.nodes & 1023) == 0:
@@ -1302,9 +1688,15 @@ cdef int negamax(CBoard* b, int depth, int alpha, int beta, int ply,
     # Repetition / fifty-move draw
     if ply > 0:
         if b.halfmove >= 100: return 0
+        rep_count = 0
         for i in range(b.hist_top - 2, b.hist_top - b.halfmove - 1, -2):
             if i < 0: break
-            if b.hash_history[i] == b.zobrist: return 0
+            if b.hash_history[i] == b.zobrist:
+                rep_count += 1
+                if rep_count >= 2:
+                    return 0
+        if rep_count > 0:
+            return -15
 
     if depth <= 0:
         return qsearch(b, alpha, beta, ply, ss, tt)
@@ -1354,15 +1746,30 @@ cdef int negamax(CBoard* b, int depth, int alpha, int beta, int ply,
     # Futility pruning condition
     f_prune = (not in_check and depth <= 3 and static_eval + 200 * depth < alpha)
 
+    # Singular extension check: probe TT for a deep entry to see if tt_move is singular
+    is_singular = False
+    if (tt_move and depth >= 6 and not in_check and
+            tt.probe_for_singular(b.zobrist, depth - 3, &sing_score, &sing_move,
+                                  &sing_bound, ply) and
+            sing_bound != BOUND_UPPER and abs(sing_score) < MATE_LOWER):
+        # Do reduced-depth search excluding tt_move
+        # We use a simple exclusion by temporarily marking the move as excluded via alpha/beta trick
+        sing_score = negamax(b, depth // 2, sing_score - 2 * depth - 1,
+                             sing_score - 2 * depth, ply, ss, tt, False)
+        if ss.stopped: return 0
+        if sing_score < tt_score - 2 * depth:
+            is_singular = True
+
     # Generate and sort moves
     nm = gen_legal_moves(b, moves)
     if nm == 0:
         return -MATE_SCORE + ply if in_check else 0
 
+    prev_pt = ss.piece_to[ply - 1] if ply > 0 else -1
     for i in range(nm):
         move_scores[i] = _score_move(b, moves[i], tt_move,
                                       ss.killers[ply][0], ss.killers[ply][1],
-                                      ss.history, ply)
+                                      ss.history, prev_pt)
     _sort_moves(moves, nm, move_scores)
 
     best_score  = -INF
@@ -1385,25 +1792,42 @@ cdef int negamax(CBoard* b, int depth, int alpha, int beta, int ply,
         if not in_check and depth <= 4 and is_quiet and quiet_count >= 3 + depth * depth:
             continue
 
-        # LMR
+        # Extension: +1 for singular TT move, check extension already applied above
+        extension = 0
+        if is_singular and moves[i] == tt_move:
+            extension = 1
+
+        # LMR: log-based formula
         reduction = 0
-        if depth >= 3 and i >= 4 and is_quiet and not in_check:
-            if depth >= 8:   reduction = 2
-            elif depth >= 5: reduction = 1
-            else:            reduction = 1
+        if depth >= 3 and i >= 2 and is_quiet and not in_check:
+            lmr_idx = i if i < 64 else 63
+            reduction = LMR_TABLE[depth if depth < 128 else 127][lmr_idx]
             if not improving: reduction += 1
+            if pv_node and reduction > 1: reduction -= 1
+            if reduction < 0: reduction = 0
             if reduction > depth - 2: reduction = depth - 2
+
+        # Find moving piece type (for piece_to tracking)
+        moving_pt = NO_PT
+        for pt in range(6):
+            if b.pieces[b.stm][pt] & bit(move_from(moves[i])): moving_pt = pt; break
 
         do_make_move(b, moves[i])
         if is_quiet: quiet_count += 1
 
+        # Track piece_to at this ply for continuation history in child nodes
+        if moving_pt != NO_PT:
+            ss.piece_to[ply] = moving_pt * 64 + move_to(moves[i])
+        else:
+            ss.piece_to[ply] = -1
+
         # PVS
         if i == 0:
-            score = -negamax(b, depth - 1, -beta, -alpha, ply + 1, ss, tt, True)
+            score = -negamax(b, depth - 1 + extension, -beta, -alpha, ply + 1, ss, tt, True)
         else:
-            score = -negamax(b, depth - 1 - reduction, -alpha - 1, -alpha, ply + 1, ss, tt, True)
+            score = -negamax(b, depth - 1 - reduction + extension, -alpha - 1, -alpha, ply + 1, ss, tt, True)
             if score > alpha and (reduction > 0 or score < beta):
-                score = -negamax(b, depth - 1, -beta, -alpha, ply + 1, ss, tt, True)
+                score = -negamax(b, depth - 1 + extension, -beta, -alpha, ply + 1, ss, tt, True)
 
         do_unmake_move(b, moves[i])
         if ss.stopped: return 0
@@ -1418,11 +1842,19 @@ cdef int negamax(CBoard* b, int depth, int alpha, int beta, int ply,
                 if moves[i] != <uint32_t>ss.killers[ply][0]:
                     ss.killers[ply][1] = ss.killers[ply][0]
                     ss.killers[ply][0] = moves[i]
-                # History
+                # Butterfly history
                 hkey = move_from(moves[i]) * 64 + move_to(moves[i])
                 ss.history[hkey] += depth * depth
                 if ss.history[hkey] > 1000000:
                     for j in range(64 * 64): ss.history[j] //= 2
+                # Continuation history update
+                if prev_pt >= 0 and moving_pt != NO_PT:
+                    cont_key = moving_pt * 64 + move_to(moves[i])
+                    CONT_HIST[prev_pt][cont_key] += depth * depth
+                    if CONT_HIST[prev_pt][cont_key] > 1000000:
+                        for j in range(384):
+                            for pt in range(384):
+                                CONT_HIST[j][pt] //= 2
             tt.store(b.zobrist, depth, score, moves[i], BOUND_LOWER, ply)
             return score
 
@@ -1551,6 +1983,7 @@ cdef class CSearch:
         """Reset TT age and stop flag (call on ucinewgame)."""
         self._tt.clear()
         self._stop_requested = False
+        memset(CONT_HIST, 0, sizeof(CONT_HIST))
 
     def search(self, double time_limit, int max_depth=64, callback=None):
         """

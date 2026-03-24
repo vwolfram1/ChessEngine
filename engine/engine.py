@@ -163,11 +163,15 @@ class ChessEngine:
                     # Book / tablebase checks still use python-chess
                     book_move = self._try_book(board_copy)
                     if book_move:
+                        if on_depth:
+                            on_depth(0, 0, 0, book_move.uci(), [book_move.uci()], 1, 0.0, 0)
                         if on_done:
                             on_done(book_move.uci(), 0, [book_move.uci()])
                         return
                     tb_move = self._try_tablebase(board_copy)
                     if tb_move:
+                        if on_depth:
+                            on_depth(0, 0, 0, tb_move.uci(), [tb_move.uci()], 1, 0.0, 0)
                         if on_done:
                             on_done(tb_move.uci(), 0, [tb_move.uci()])
                         return
@@ -203,12 +207,16 @@ class ChessEngine:
             try:
                 book_move = self._try_book(board_copy)
                 if book_move:
+                    if on_depth:
+                        on_depth(0, 0, 0, book_move, [book_move], 1, 0.0, 0)
                     if on_done:
                         on_done(book_move.uci(), 0, [book_move.uci()])
                     return
 
                 tb_move = self._try_tablebase(board_copy)
                 if tb_move:
+                    if on_depth:
+                        on_depth(0, 0, 0, tb_move, [tb_move], 1, 0.0, 0)
                     if on_done:
                         on_done(tb_move.uci(), 0, [tb_move.uci()])
                     return
