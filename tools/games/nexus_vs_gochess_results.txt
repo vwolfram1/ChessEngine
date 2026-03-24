@@ -1,0 +1,19 @@
+Indexing opening suite...
+Started game 1 of 4 (NexusChess vs GoChess)
+Finished game 1 (NexusChess vs GoChess): 0-1 {Black wins by adjudication}
+Started game 2 of 4 (GoChess vs NexusChess)
+Finished game 2 (GoChess vs NexusChess): 1-0 {White mates}
+Started game 3 of 4 (NexusChess vs GoChess)
+Finished game 3 (NexusChess vs GoChess): 1-0 {White wins by adjudication}
+Started game 4 of 4 (GoChess vs NexusChess)
+Finished game 4 (GoChess vs NexusChess): 0-1 {Black wins by adjudication}
+--------------------------------------------------
+Results of NexusChess vs GoChess (5/move, 1t - NULL, 256MB - NULL, openings.epd):
+Elo: -0.00 +/- nan, nElo: 0.00 +/- 340.48
+LOS: 50.00 %, DrawRatio: 0.00 %, PairsRatio: 1.00
+Games: 4, Wins: 2, Losses: 2, Draws: 0, Points: 2.0 (50.00 %)
+Ptnml(0-2): [1, 0, 0, 0, 1], WL/DD Ratio: -nan
+--------------------------------------------------
+Finished match
+Total Time: 00:25:05 (hours:minutes:seconds)
+

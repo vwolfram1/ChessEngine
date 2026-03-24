@@ -1,0 +1,361 @@
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.23"]
+[Round "1"]
+[White "NexusChess"]
+[Black "GoChess"]
+[Result "0-1"]
+[SetUp "1"]
+[FEN "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1"]
+[GameDuration "00:05:30"]
+[GameStartTime "2026-03-23T17:01:59 -0600"]
+[GameEndTime "2026-03-23T17:07:34 -0600"]
+[PlyCount "62"]
+[Termination "adjudication"]
+[WhiteTimeControl "5/move"]
+[BlackTimeControl "5/move"]
+[ECO "E10"]
+[Opening "Indian Defense: Anti-Nimzo-Indian"]
+
+1... Nf6 {-0.20/0 5.500s, n=2314155, nps=0, pv=""}
+2. c4 {+0.55/5 5.147s, n=1403, nps=1296, pv="c2c4 d7d5 c4d5 b8c6"}
+e6 {0.00/0 5.500s, n=1404827, nps=0, pv=""}
+3. Nf3 {+0.72/5 5.658s, n=6653, nps=2532, pv="g1f3 a7a5 d4d5 h7h6"}
+d5 {-400.00/0 5.500s, n=782059, nps=0, pv=""}
+4. cxd5 {+0.54/5 5.539s, n=1591, nps=1703, pv="c4d5 d8d5 f3h4 c7c5 c1e3"}
+exd5 {+0.25/0 5.500s, n=991113, nps=0, pv=""}
+5. Nc3 {+0.56/4 5.565s, n=4101, nps=1131, pv="b1c3 h7h5 f3e5"}
+Nc6 {+0.35/0 5.499s, n=732655, nps=0, pv=""}
+6. Bg5 {+1.00/3 5.426s, n=672, nps=9736, pv="c1g5 f8e7 a2a4"}
+Bb4 {+0.35/0 5.500s, n=309785, nps=0, pv=""}
+7. a3 {+1.74/3 5.261s, n=1129, nps=4866, pv="a2a3 b4c3"}
+Bxc3+ {+0.60/0 5.500s, n=204833, nps=0, pv=""}
+8. bxc3 {+1.62/4 5.837s, n=1720, nps=2155, pv="b2c3 d8d7 h2h4"}
+h6 {+0.50/0 5.500s, n=421592, nps=0, pv=""}
+9. Bxf6 {+0.16/4 4.985s, n=7072, nps=1902, pv="g5f6 g7g5"}
+Qxf6 {+0.10/0 5.500s, n=1091633, nps=0, pv=""}
+10. Qb3 {-0.45/5 5.620s, n=14424, nps=2842, pv="d1b3 a7a5 f3d2 f6g5 d2f3"}
+Ne7 {+0.20/0 5.500s, n=537187, nps=0, pv=""}
+11. h4 {-0.05/4 5.360s, n=15181, nps=3223, pv="h2h4 e8g8 f3d2"}
+O-O {+0.45/0 5.500s, n=650827, nps=0, pv=""}
+12. Nd2 {-0.39/4 5.056s, n=5398, nps=1668, pv="f3d2 f8e8"}
+Qc6 {+0.45/0 5.499s, n=632989, nps=0, pv=""}
+13. a4 {-0.17/4 4.140s, n=7225, nps=1745, pv="a3a4 f8e8 a4a5 c8e6"}
+Be6 {+0.75/0 5.500s, n=723304, nps=0, pv=""}
+14. Qb4 {-0.03/4 5.437s, n=7345, nps=1854, pv="b3b4 e6f5 g2g4"}
+Nc8 {+0.85/0 5.500s, n=601192, nps=0, pv=""}
+15. a5 {+0.48/6 3.654s, n=11503, nps=3169, pv="a4a5 f8e8 g2g3 h6h5 a1d1 e6g4"}
+Nd6 {+0.90/0 5.500s, n=656555, nps=0, pv=""}
+16. Qa3 {-0.09/4 5.018s, n=12586, nps=3088, pv="b4a3 f8e8 a3b3 d6f5"}
+Rac8 {+0.90/0 5.499s, n=646323, nps=0, pv=""}
+17. e3 {+0.17/4 5.295s, n=8309, nps=1932, pv="e2e3 g8h8 a1d1 f8d8"}
+Ra8 {+0.75/0 5.500s, n=522162, nps=0, pv=""}
+18. Rd1 {+0.97/4 5.227s, n=8369, nps=1826, pv="a1d1 f8e8 f1d3 d6c8"}
+Ne4 {+0.75/0 5.500s, n=640080, nps=0, pv=""}
+19. a6 {+0.72/5 5.099s, n=14172, nps=2964, pv="a5a6 e4d2 d1d2 f8d8"}
+bxa6 {0.00/0 5.499s, n=239505, nps=0, pv=""}
+20. Nxe4 {-0.12/5 4.007s, n=7761, nps=2319, pv="d2e4 d5e4 d4d5 f8d8"}
+dxe4 {0.00/0 5.500s, n=551040, nps=0, pv=""}
+21. f3 {-0.36/4 5.136s, n=1116, nps=1937, pv="f2f3 f8d8 f3e4 f7f5"}
+exf3 {+1.90/0 5.502s, n=400251, nps=0, pv=""}
+22. Kf2 {-0.38/4 5.450s, n=12260, nps=2656, pv="e1f2 f8d8 g2f3"}
+Bd5 {+1.25/0 5.500s, n=410152, nps=0, pv=""}
+23. e4 {-0.90/4 5.309s, n=11893, nps=2499, pv="e3e4 f3g2 f1g2 c6f6 f2e1"}
+Bxe4 {+2.70/0 5.500s, n=361690, nps=0, pv=""}
+24. gxf3 {-2.89/3 5.397s, n=372, nps=1377, pv="g2f3 e4f3 f1g2"}
+Bxf3 {+3.70/0 5.500s, n=577332, nps=0, pv=""}
+25. d5 {-6.58/4 5.352s, n=12029, nps=3421, pv="d4d5 c6f6 f1e2 f3h1 f2g1"}
+Qf6 {-400.00/0 5.500s, n=691296, nps=0, pv=""}
+26. Bh3 {-6.09/3 5.572s, n=1252, nps=6486, pv="f1h3 f3d1 f2e1 f8d8 e1d1"}
+Bxh1+ {+10.30/0 5.500s, n=825078, nps=0, pv=""}
+27. Kg1 {-5.78/3 5.681s, n=1488, nps=3318, pv="f2g1 f6f3"}
+Qf3 {+8.50/0 5.500s, n=567307, nps=0, pv=""}
+28. Rd4 {-9.87/3 5.078s, n=423, nps=2317, pv="d1d4 f3h3 a3a6"}
+Qxh3 {+11.60/0 5.500s, n=703587, nps=0, pv=""}
+29. Rd2 {-11.03/5 4.147s, n=9014, nps=2176, pv="d4d2 h3h4 a3a6"}
+Qe3+ {+12.95/0 5.500s, n=877212, nps=0, pv=""}
+30. Kxh1 {-11.93/4 4.359s, n=10520, nps=2811, pv="g1h1 e3e1 h1h2 e1d2 h2g3 d2d5 a3a6"}
+Qe1+ {+13.50/0 5.500s, n=1118858, nps=0, pv=""}
+31. Kh2 {-13.24/4 6.012s, n=5087, nps=2785, pv="h1h2 e1h4 h2g2 h4g5 g2h1 g5d2 a3c5"}
+Qxd2+ {+13.65/0 5.500s, n=1352994, nps=0, pv=""}
+32. Kg3 {-13.36/5 5.177s, n=12824, nps=2484, pv="h2g3 d2d5 a3e7 c7c5 c3c4 d5d1", Black wins by adjudication}
+0-1
+
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.23"]
+[Round "1"]
+[White "GoChess"]
+[Black "NexusChess"]
+[Result "1-0"]
+[SetUp "1"]
+[FEN "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1"]
+[GameDuration "00:06:47"]
+[GameStartTime "2026-03-23T17:07:34 -0600"]
+[GameEndTime "2026-03-23T17:14:23 -0600"]
+[PlyCount "76"]
+[Termination "normal"]
+[WhiteTimeControl "5/move"]
+[BlackTimeControl "5/move"]
+[ECO "D02"]
+[Opening "Queen's Pawn Game: Zukertort Variation"]
+
+1... d5 {-0.17/5 4.349s, n=6625, nps=1573, pv="d7d5 b1c3 a7a5 g1f3 g8f6"}
+2. Nf3 {0.00/0 5.500s, n=1381739, nps=0, pv=""}
+a5 {-0.27/4 5.144s, n=6106, nps=1995, pv="a7a5 a2a4 h7h6 c1f4"}
+3. Nc3 {+0.35/0 5.500s, n=853206, nps=0, pv=""}
+h6 {-0.39/4 4.539s, n=6054, nps=1493, pv="h7h6 e2e4 d5e4 c3e4"}
+4. Bf4 {+0.80/0 5.500s, n=539905, nps=0, pv=""}
+Bf5 {-0.05/5 6.356s, n=3594, nps=2610, pv="c8f5 e2e4 b8d7 h2h4"}
+5. e3 {+1.05/0 5.500s, n=430211, nps=0, pv=""}
+Qd7 {-0.42/4 5.640s, n=3145, nps=2644, pv="d8d7 f4e5 f5e6 a2a4"}
+6. Ne5 {+1.30/0 5.500s, n=432652, nps=0, pv=""}
+Qe6 {-0.37/5 5.436s, n=5824, nps=1975, pv="d7e6 h2h4 c7c6 e5f3 b8d7"}
+7. g4 {+1.30/0 5.502s, n=193313, nps=0, pv=""}
+Bh7 {-0.64/4 4.887s, n=6423, nps=2003, pv="f5h7 f1d3 h7d3 e5d3"}
+8. Bb5+ {+1.15/0 5.520s, n=73520, nps=0, pv=""}
+c6 {-0.50/3 5.570s, n=441, nps=4569, pv="c7c6 b5d3 h7d3 e5d3"}
+9. Bd3 {+1.15/0 5.501s, n=125015, nps=0, pv=""}
+Nf6 {-0.30/5 5.556s, n=4547, nps=2262, pv="g8f6"}
+10. Bxh7 {+1.10/0 5.501s, n=98299, nps=0, pv=""}
+Nxh7 {-0.50/4 5.265s, n=8716, nps=2101, pv="f6h7 e5d3 a5a4"}
+11. O-O {+1.35/0 5.500s, n=339027, nps=0, pv=""}
+a4 {-0.53/5 5.310s, n=5761, nps=1428, pv="a5a4 a1c1 b8d7 e5d7 e6d7"}
+12. Re1 {+1.05/0 5.501s, n=245138, nps=0, pv=""}
+Nf6 {-0.43/3 5.888s, n=761, nps=4262, pv="h7f6 f4g3 a4a3"}
+13. g5 {-400.00/0 5.500s, n=134924, nps=0, pv=""}
+hxg5 {+0.27/4 5.443s, n=835, nps=4337, pv="h6g5 f4g5 f6g8 e5f3"}
+14. Bxg5 {-400.00/0 5.507s, n=116273, nps=0, pv=""}
+Rh3 {+0.94/6 5.587s, n=5410, nps=1888, pv="h8h3 e5d3 e6g4 d1g4 f6g4"}
+15. Ne2 {+1.20/0 5.500s, n=61473, nps=0, pv=""}
+Nbd7 {+1.37/5 5.301s, n=10506, nps=2308, pv="b8d7 e5d7 f6d7"}
+16. Nf4 {+1.95/0 5.523s, n=93970, nps=0, pv=""}
+Qf5 {-0.04/4 5.494s, n=12026, nps=2504, pv="e6f5 f4h3 f5h3 e5d7"}
+17. Nxh3 {+2.00/0 5.522s, n=93797, nps=0, pv=""}
+Qxh3 {-0.43/4 5.317s, n=10717, nps=2494, pv="f5h3 g5f6 d7f6 c2c4"}
+18. Bxf6 {+2.40/0 5.501s, n=250641, nps=0, pv=""}
+exf6 {-0.23/5 5.523s, n=12489, nps=2470, pv="e7f6 e5d7 e8d7 e3e4 d7c8"}
+19. Nxd7 {+2.20/0 5.500s, n=376119, nps=0, pv=""}
+Kxd7 {-0.37/4 5.102s, n=12802, nps=2671, pv="e8d7 e3e4 a8e8 c2c4"}
+20. e4 {+0.75/0 5.500s, n=1077667, nps=0, pv=""}
+dxe4 {-0.11/5 5.587s, n=8605, nps=2520, pv="d5e4 e1e4 f8d6 d1g4 h3g4 e4g4 g7g5"}
+21. Rxe4 {-400.00/0 5.500s, n=913517, nps=0, pv=""}
+f5 {-0.32/5 5.620s, n=6917, nps=1861, pv="f6f5 e4e5 h3g4"}
+22. Re3 {0.00/0 5.500s, n=1161546, nps=0, pv=""}
+Qh6 {-0.47/5 5.210s, n=8252, nps=2919, pv="h3h6 e3e5 h6g5 g1f1 d7c7 e5e2"}
+23. Qf3 {+1.95/0 5.500s, n=627996, nps=0, pv=""}
+f4 {-0.26/5 5.497s, n=8736, nps=3873, pv="f5f4 f3g4 d7c7 e3e1"}
+24. Qg4+ {+2.30/0 5.500s, n=566275, nps=0, pv=""}
+Kc7 {+0.22/4 5.216s, n=1326, nps=2285, pv="d7c7 e3e5 f8d6 e5f5 a8f8"}
+25. Rd3 {+1.90/0 5.500s, n=724282, nps=0, pv=""}
+Bd6 {+0.47/3 5.362s, n=1375, nps=9613, pv="f8d6 g4f5 a8f8 g1h1"}
+26. Rad1 {+1.70/0 5.500s, n=717370, nps=0, pv=""}
+Ra5 {+0.48/3 5.402s, n=1485, nps=8582, pv="a8a5 g4f3 a5g5 g1h1"}
+27. h4 {+1.40/0 5.500s, n=599993, nps=0, pv=""}
+Kb6 {+0.96/3 5.296s, n=740, nps=2535, pv="c7b6 g4c8 h6h4"}
+28. c4 {+1.95/0 5.500s, n=581356, nps=0, pv=""}
+Bc7 {-1.26/5 5.244s, n=3415, nps=1131, pv="d6c7 c4c5 b6b5 h4h5 h6h7 d3f3"}
+29. Re1 {+2.10/0 5.500s, n=693583, nps=0, pv=""}
+Bd8 {+0.65/3 5.368s, n=1306, nps=6031, pv="c7d8 e1e7"}
+30. b4 {+2.10/0 5.500s, n=529777, nps=0, pv=""}
+Ra7 {-1.46/4 5.387s, n=1223, nps=3620, pv="a5a7 c4c5"}
+31. c5+ {+1.80/0 5.500s, n=557199, nps=0, pv=""}
+Kb5 {-1.56/5 4.685s, n=9517, nps=2139, pv="b6b5 d4d5 f7f5 g4f5 d8h4 d3h3"}
+32. h5 {+1.75/0 5.500s, n=451997, nps=0, pv=""}
+Kxb4 {-1.05/6 5.346s, n=4467, nps=1404, pv="b5b4 e1e8 d8f6 g4f5 h6g5 f5g5 f6g5"}
+33. a3+ {+1.40/0 5.500s, n=638811, nps=0, pv=""}
+Kc4 {-0.80/4 5.833s, n=9561, nps=2874, pv="b4c4 d3d1 d8f6 e1e8 c4b3"}
+34. Qe2 {+1.75/0 5.500s, n=549078, nps=0, pv=""}
+f5 {-0.78/4 5.266s, n=6080, nps=1705, pv="f7f5 d3d1 c4c3"}
+35. Rdd1+ {+200.00/0 5.500s, n=912628, nps=0, pv=""}
+Kc3 {-M1004/7 5.526s, n=1412, nps=685, pv="c4c3 e2d3 c3b2 e1e2"}
+36. Rd3+ {+200.00/0 5.500s, n=967988, nps=0, pv=""}
+Kc4 {0.00/63 0.081s, n=126, nps=1555, pv="c3c4"}
+37. Rdd1+ {+200.00/0 5.500s, n=1060247, nps=0, pv=""}
+Kc3 {0.00/17 5.518s, n=1456, nps=485, pv="c4c3"}
+38. Qd3+ {+200.00/0 5.499s, n=1371358, nps=0, pv=""}
+Kb2 {-M1002/7 5.211s, n=416, nps=4753, pv="c3b2 e1e2"}
+39. Rd2# {+200.05/0 5.499s, n=612028, nps=0, pv="", White mates} 1-0
+
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.23"]
+[Round "2"]
+[White "NexusChess"]
+[Black "GoChess"]
+[Result "1-0"]
+[SetUp "1"]
+[FEN "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 1"]
+[GameDuration "00:05:07"]
+[GameStartTime "2026-03-23T17:14:23 -0600"]
+[GameEndTime "2026-03-23T17:19:32 -0600"]
+[PlyCount "57"]
+[Termination "adjudication"]
+[WhiteTimeControl "5/move"]
+[BlackTimeControl "5/move"]
+[ECO "C64"]
+[Opening "Ruy Lopez: Classical Variation"]
+
+1... Bc5 {0.00/0 5.503s, n=362283, nps=0, pv=""}
+2. Bxc6 {+1.19/3 6.081s, n=1131, nps=1063, pv="b5c6 d7c6 f3e5"}
+bxc6 {-0.50/0 5.500s, n=774109, nps=0, pv=""}
+3. Nxe5 {+1.03/4 5.288s, n=7285, nps=3028, pv="f3e5 c5d4 d1f3 g8h6"}
+Qh4 {0.00/0 5.501s, n=688921, nps=0, pv=""}
+4. Qf3 {+1.17/5 5.164s, n=12847, nps=2606, pv="d1f3 h4f6 f3f6 g8f6 b1c3"}
+Nf6 {-400.00/0 5.500s, n=395415, nps=0, pv=""}
+5. Nc3 {+1.94/4 4.474s, n=6285, nps=1421, pv="b1c3 h8f8 e1g1 f6g8"}
+Bd4 {-0.25/0 5.500s, n=204386, nps=0, pv=""}
+6. Nc4 {-0.04/4 5.498s, n=2219, nps=3171, pv="e5c4"}
+Nxe4 {0.00/0 5.500s, n=180600, nps=0, pv=""}
+7. Nxe4 {+2.58/3 5.414s, n=834, nps=3525, pv="c3e4 e8g8 e1g1 c8a6"}
+d5 {-1.95/0 5.500s, n=607038, nps=0, pv=""}
+8. Ned6+ {+1.15/3 5.572s, n=933, nps=2873, pv="e4d6"}
+cxd6 {-0.20/0 5.500s, n=484977, nps=0, pv=""}
+9. Nxd6+ {+0.49/4 5.730s, n=6474, nps=3440, pv="c4d6 e8d7 d6c8 h8e8 e1f1 d7c8"}
+Kd7 {-400.00/0 5.499s, n=424463, nps=0, pv=""}
+10. Nxc8 {+0.41/5 5.657s, n=5340, nps=2669, pv="d6c8 h8e8 e1f1 d7c8 f3f7 e8e4"}
+Qxf2+ {0.00/0 5.500s, n=872950, nps=0, pv=""}
+11. Qxf2 {+2.52/4 6.175s, n=719, nps=3585, pv="f3f2 d4f2 e1f2 a8c8 b2b4 h7h5"}
+Bxf2+ {-3.35/0 5.499s, n=862447, nps=0, pv=""}
+12. Kxf2 {+3.05/4 5.533s, n=4867, nps=2330, pv="e1f2 d7c8 d2d4 a7a5"}
+Rhxc8 {-3.25/0 5.500s, n=1864928, nps=0, pv=""}
+13. g4 {+2.66/6 5.380s, n=5595, nps=2003, pv="g2g4 c6c5 d2d4"}
+Rcb8 {-400.00/0 5.500s, n=3332698, nps=0, pv=""}
+14. d4 {+3.28/6 4.895s, n=8847, nps=2055, pv="d2d4 a7a5 a2a4 h7h6"}
+Re8 {-3.00/0 5.500s, n=1702202, nps=0, pv=""}
+15. g5 {+3.49/6 5.637s, n=11354, nps=3208, pv="g4g5 e8e4 h1d1 f7f6 b2b4 f6g5"}
+Re4 {-2.90/0 5.500s, n=1666299, nps=0, pv=""}
+16. Rd1 {+3.64/5 5.629s, n=785, nps=6301, pv="h1d1 f7f6 g5f6 g7f6 b2b4"}
+Rb8 {-2.60/0 5.500s, n=1415195, nps=0, pv=""}
+17. a4 {+3.55/4 5.439s, n=4421, nps=2131, pv="a2a4 a7a5 h2h3 h7h5"}
+Kc8 {-2.70/0 5.500s, n=1462867, nps=0, pv=""}
+18. Re1 {+3.98/5 4.368s, n=8125, nps=2682, pv="d1e1 f7f6"}
+Rxe1 {-2.60/0 5.500s, n=1133221, nps=0, pv=""}
+19. Kxe1 {+3.71/9 5.248s, n=4498, nps=899, pv="f2e1 h7h6 h2h4 h6g5 h4g5 a7a5 e1e2 c8d7 e2e3"}
+a5 {-400.00/0 5.500s, n=1654163, nps=0, pv=""}
+20. b3 {+3.71/7 4.979s, n=3925, nps=1262, pv="b2b3 f7f6 g5f6 g7f6 c1d2 b8a8 h2h4"}
+Rb4 {-2.55/0 5.500s, n=1834543, nps=0, pv=""}
+21. Be3 {+3.84/6 5.381s, n=1759, nps=1806, pv="c1e3 h7h6 h2h4 h6g5 a1d1"}
+c5 {-2.50/0 5.500s, n=1446801, nps=0, pv=""}
+22. dxc5 {+5.24/7 5.387s, n=5708, nps=2550, pv="d4c5 b4e4 e1f2 d5d4 e3d2 h7h6 c5c6"}
+Rh4 {-2.85/0 5.500s, n=1341102, nps=0, pv=""}
+23. Rd1 {+4.92/5 4.730s, n=8580, nps=2631, pv="a1d1 h4h2 c5c6 f7f6"}
+Kc7 {-3.05/0 5.499s, n=971475, nps=0, pv=""}
+24. Rxd5 {+5.94/6 4.141s, n=8938, nps=2166, pv="d1d5 f7f6 h2h3"}
+Rxh2 {-4.00/0 5.500s, n=1067037, nps=0, pv=""}
+25. Bf4+ {+9.02/10 5.060s, n=22578, nps=8342, pv="e3f4 c7c6 d5d6 c6c5 f4h2 h7h6 d6a6 c5b4 h2d6 b4c3 a6c6 c3d4"}
+Kc6 {-400.00/0 5.500s, n=1314782, nps=0, pv=""}
+26. Rd6+ {+9.03/9 5.308s, n=5969, nps=3444, pv="d5d6 c6c5 f4h2 h7h6 d6a6 c5b4 a6c6 b4a3 g5h6 g7h6"}
+Kxc5 {-9.00/0 5.500s, n=2309881, nps=0, pv=""}
+27. Bxh2 {+9.17/9 5.318s, n=3652, nps=2876, pv="f4h2 h7h6 d6a6 c5b4 a6c6 b4a3 h2d6 a3b2 d6e5 b2c1 e5f4 c1b2"}
+h6 {-9.05/0 5.500s, n=3801600, nps=0, pv=""}
+28. Ra6 {+9.22/6 5.271s, n=2493, nps=4619, pv="d6a6 h6g5 a6a5 c5c6 a5g5 g7g6 a4a5"}
+hxg5 {-8.85/0 5.500s, n=2627178, nps=0, pv=""}
+29. Rxa5+ {+9.56/6 5.388s, n=3594, nps=1351, pv="a6a5 c5d4 a5g5 g7g6 a4a5 d4c3 e1d1"}
+Kd4 {-9.20/0 5.500s, n=4008667, nps=0, pv="", White wins by adjudication} 1-0
+
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.23"]
+[Round "2"]
+[White "GoChess"]
+[Black "NexusChess"]
+[Result "0-1"]
+[SetUp "1"]
+[FEN "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 1"]
+[GameDuration "00:07:31"]
+[GameStartTime "2026-03-23T17:19:32 -0600"]
+[GameEndTime "2026-03-23T17:27:04 -0600"]
+[PlyCount "84"]
+[Termination "adjudication"]
+[WhiteTimeControl "5/move"]
+[BlackTimeControl "5/move"]
+[ECO "C61"]
+[Opening "Ruy Lopez: Bird Variation"]
+
+1... Nd4 {-0.25/5 5.142s, n=6324, nps=1393, pv="c6d4 f3d4"}
+2. Nc3 {+0.25/0 5.499s, n=399175, nps=0, pv=""}
+Nxb5 {+0.75/5 5.157s, n=9018, nps=2370, pv="d4b5 c3b5 c7c6 b5c3 f8d6"}
+3. Nxb5 {+0.35/0 5.499s, n=622383, nps=0, pv=""}
+c6 {+1.18/5 5.143s, n=5961, nps=2111, pv="c7c6 b5c3 d8f6 f3g1 h7h6"}
+4. Nc3 {-400.00/0 5.500s, n=555546, nps=0, pv=""}
+Qf6 {+1.25/4 5.432s, n=1089, nps=5076, pv="d8f6 f3g1 f8b4 g1h3"}
+5. O-O {+0.75/0 5.500s, n=587903, nps=0, pv=""}
+Bc5 {+0.83/5 4.680s, n=14997, nps=3643, pv="f8c5 f3e1 h7h6 a2a4"}
+6. d3 {+0.70/0 5.500s, n=460431, nps=0, pv=""}
+Be7 {+0.91/4 4.266s, n=6960, nps=1828, pv="c5e7 c3a4 d7d5 f3d2"}
+7. Be3 {+1.05/0 5.500s, n=626931, nps=0, pv=""}
+h6 {+0.28/4 5.541s, n=4401, nps=1532, pv="h7h6 a2a4 d7d5 f3d2"}
+8. d4 {+1.20/0 5.500s, n=566811, nps=0, pv=""}
+d6 {+0.07/4 4.390s, n=4680, nps=1490, pv="d7d6 d4e5 d6e5 f3d2"}
+9. Qd3 {+1.15/0 5.500s, n=287233, nps=0, pv=""}
+a5 {+0.25/5 5.299s, n=4961, nps=1581, pv="a7a5 f1d1 c8e6 d4e5 d6e5"}
+10. Rfe1 {+1.25/0 5.501s, n=306127, nps=0, pv=""}
+Kf8 {+0.65/5 5.650s, n=11372, nps=3031, pv="e8f8 d4e5 d6e5 f3d2 a5a4"}
+11. Nd2 {+1.15/0 5.501s, n=235996, nps=0, pv=""}
+a4 {+0.65/3 5.476s, n=643, nps=2902, pv="a5a4 d4e5"}
+12. Rac1 {+1.10/0 5.500s, n=267072, nps=0, pv=""}
+a3 {+0.58/4 5.317s, n=9269, nps=3087, pv="a4a3 d4e5 d6e5 b2a3"}
+13. bxa3 {-400.00/0 5.500s, n=138460, nps=0, pv=""}
+Rxa3 {+0.58/3 5.585s, n=435, nps=7188, pv="a8a3 d4e5 d6e5"}
+14. Nc4 {+1.35/0 5.500s, n=217534, nps=0, pv=""}
+exd4 {+0.25/3 5.602s, n=398, nps=5451, pv="e5d4 c4a3 d4c3"}
+15. Nxa3 {+2.10/0 5.503s, n=336158, nps=0, pv=""}
+dxe3 {-0.48/5 5.209s, n=3974, nps=1799, pv="d4e3 d3e3 c8e6 c3e2 b7b5"}
+16. Rxe3 {+2.05/0 5.500s, n=492180, nps=0, pv=""}
+Qg5 {+0.62/3 5.585s, n=608, nps=5427, pv="f6g5 f2f4"}
+17. Nc4 {+2.30/0 5.500s, n=529011, nps=0, pv=""}
+Bh3 {+0.22/4 5.291s, n=9019, nps=2913, pv="c8h3 e3h3 g5c1 d3d1 c1d1 c3d1"}
+18. g3 {+2.25/0 5.501s, n=455765, nps=0, pv=""}
+Nf6 {-1.00/4 3.647s, n=11414, nps=3250, pv="g8f6 f2f4 g5c5"}
+19. f4 {+2.20/0 5.500s, n=470249, nps=0, pv=""}
+Qc5 {-0.41/3 5.500s, n=455, nps=4416, pv="g5c5 c4d2 f8g8"}
+20. e5 {+1.85/0 5.500s, n=388199, nps=0, pv=""}
+dxe5 {+1.11/4 4.407s, n=10700, nps=3285, pv="d6e5 c4e5 h8g8 e5f7"}
+21. Nxe5 {+1.40/0 5.500s, n=371152, nps=0, pv=""}
+Kg8 {+1.42/4 5.416s, n=14958, nps=2970, pv="f8g8 d3e2 b7b5 e5f7"}
+22. Re1 {+1.55/0 5.500s, n=445451, nps=0, pv=""}
+Nh5 {+0.59/3 5.308s, n=964, nps=4600, pv="f6h5 e5f7 g8f7"}
+23. a3 {+1.05/0 5.500s, n=310329, nps=0, pv=""}
+Bf6 {+0.52/3 5.242s, n=743, nps=2899, pv="e7f6"}
+24. Na4 {+0.95/0 5.501s, n=260939, nps=0, pv=""}
+Qa7 {+0.45/3 5.415s, n=456, nps=2746, pv="c5a7 e5f7 g8f7"}
+25. Qb3 {+0.60/0 5.500s, n=252219, nps=0, pv=""}
+Bxe5 {+1.73/4 5.589s, n=8172, nps=3383, pv="f6e5 f4e5 b7b5 e1d1"}
+26. fxe5 {+0.95/0 5.500s, n=492324, nps=0, pv=""}
+Bc8 {-0.98/4 5.750s, n=8015, nps=4163, pv="h3c8 a4b6 c8f5 e5e6"}
+27. Nb6 {+2.10/0 5.501s, n=545794, nps=0, pv=""}
+Bf5 {-0.98/4 5.019s, n=6354, nps=3121, pv="c8f5 e5e6 a7a6"}
+28. Rd1 {+2.30/0 5.501s, n=657257, nps=0, pv=""}
+Bg4 {-1.95/4 5.264s, n=15901, nps=3380, pv="f5g4 d1d8 g8h7 b3d3 g7g6 d8h8 h7h8"}
+29. Rd8+ {+2.75/0 5.500s, n=661079, nps=0, pv=""}
+Kh7 {-2.20/4 6.202s, n=1101, nps=5370, pv="g8h7 d8h8 h7h8 b3b4 g4e6 b4f8 h8h7"}
+30. Qd3+ {+2.75/0 5.501s, n=607303, nps=0, pv=""}
+g6 {-1.85/4 5.478s, n=1144, nps=1847, pv="g7g6 d8h8 h7h8 d3d8 h8g7 e3d3 a7a6"}
+31. Rxh8+ {+2.70/0 5.500s, n=477506, nps=0, pv=""}
+Kxh8 {-1.95/4 5.855s, n=5313, nps=1640, pv="h7h8 d3d8 h8h7 h2h4 g6g5 h4g5 h7g7"}
+32. Qd4 {+2.20/0 5.500s, n=586392, nps=0, pv=""}
+Be6 {-1.71/5 3.596s, n=8572, nps=2751, pv="g4e6 e3f3 h8h7 d4d8 g6g5"}
+33. Kf2 {+1.80/0 5.500s, n=738917, nps=0, pv=""}
+g5 {-1.23/5 5.081s, n=8735, nps=2191, pv="g6g5 d4d1 a7b6 d1h5 h8g7"}
+34. c4 {+2.50/0 5.500s, n=705096, nps=0, pv=""}
+Kh7 {-1.59/5 4.883s, n=13998, nps=3572, pv="h8h7 e3e4 a7a3 g3g4 h5g7"}
+35. Qe4+ {+2.60/0 5.500s, n=660514, nps=0, pv=""}
+Kg7 {-0.40/3 5.579s, n=783, nps=2976, pv="h7g7 b6d5 c6d5 c4d5"}
+36. Rb3 {+2.30/0 5.500s, n=425300, nps=0, pv=""}
+c5 {-1.37/5 5.346s, n=2799, nps=3639, pv="c6c5 b6d5 a7b8 d5c3 b8a7"}
+37. Ke3 {+2.70/0 5.500s, n=496381, nps=0, pv=""}
+Qa5 {-0.75/4 5.007s, n=4626, nps=4333, pv="a7a5 e4f3 a5e1 f3e2 e1g1 e3e4"}
+38. Qf3 {+2.50/0 5.500s, n=443289, nps=0, pv=""}
+Qe1+ {-0.49/4 5.632s, n=10975, nps=2219, pv="a5e1 f3e2 e1g1 e3d2 g5g4 d2c3"}
+39. Kd3 {-400.00/0 5.500s, n=505931, nps=0, pv=""}
+Nf4+ {+0.86/5 5.489s, n=11479, nps=4234, pv="h5f4 d3c2 e6f5 c2b2 e1e5 b2a2 f5e4 f3g4 f4g6"}
+40. Kc2 {-400.00/0 5.500s, n=816942, nps=0, pv=""}
+Bf5+ {+4.56/4 5.436s, n=1360, nps=3624, pv="e6f5 b3d3 f5d3 c2b3 e1b1 b3a4 b1b6"}
+41. Rd3 {-400.00/0 5.500s, n=968040, nps=0, pv=""}
+Bxd3+ {+8.45/5 5.673s, n=3228, nps=1790, pv="f5d3 c2b3 e1b1 b3a4 b1b6 f3f2 b6a6 a4b3"}
+42. Kb3 {-400.00/0 5.500s, n=1091134, nps=0, pv=""}
+Qb1+ {+8.41/5 5.495s, n=2124, nps=8564, pv="e1b1 b3a4 b1b6 f3f2 b6a6 a4b3 a6c4 b3b2"}
+43. Ka4 {-200.00/0 5.500s, n=791818, nps=0, pv="", Black wins by adjudication}
+0-1
+

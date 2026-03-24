@@ -1,0 +1,36 @@
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.22"]
+[Round "1"]
+[White "NexusChess"]
+[Black "Stockfish17-1500"]
+[Result "0-1"]
+[GameDuration "00:00:16"]
+[GameStartTime "2026-03-22T23:08:21 -0600"]
+[GameEndTime "2026-03-22T23:08:42 -0600"]
+[PlyCount "0"]
+[Termination "time forfeit"]
+[WhiteTimeControl "10/move"]
+[BlackTimeControl "10/move"]
+
+0-1
+
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.22"]
+[Round "1"]
+[White "Stockfish17-1500"]
+[Black "NexusChess"]
+[Result "1-0"]
+[GameDuration "00:00:25"]
+[GameStartTime "2026-03-22T23:08:42 -0600"]
+[GameEndTime "2026-03-22T23:09:09 -0600"]
+[PlyCount "1"]
+[Termination "time forfeit"]
+[WhiteTimeControl "10/move"]
+[BlackTimeControl "10/move"]
+[ECO "A10"]
+[Opening "English Opening"]
+
+1. c4 {+0.33/30 10.000s, Black loses on time} 1-0
+

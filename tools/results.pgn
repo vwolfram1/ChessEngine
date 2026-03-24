@@ -1,0 +1,225 @@
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.22"]
+[Round "1"]
+[White "NexusChess"]
+[Black "Stockfish17-1500"]
+[Result "0-1"]
+[GameDuration "00:00:15"]
+[GameStartTime "2026-03-22T23:07:22 -0600"]
+[GameEndTime "2026-03-22T23:07:42 -0600"]
+[PlyCount "0"]
+[Termination "time forfeit"]
+[TimeControl "5+0.05"]
+
+0-1
+
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.22"]
+[Round "1"]
+[White "Stockfish17-1500"]
+[Black "NexusChess"]
+[Result "1-0"]
+[GameDuration "00:00:10"]
+[GameStartTime "2026-03-22T23:07:42 -0600"]
+[GameEndTime "2026-03-22T23:07:54 -0600"]
+[PlyCount "1"]
+[Termination "time forfeit"]
+[TimeControl "5+0.05"]
+[ECO "B00"]
+[Opening "King's Pawn Game"]
+
+1. e4 {+0.35/18 0.316s, Black loses on time} 1-0
+
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.22"]
+[Round "1"]
+[White "NexusChess"]
+[Black "Stockfish17-1500"]
+[Result "0-1"]
+[GameDuration "00:00:16"]
+[GameStartTime "2026-03-22T23:13:45 -0600"]
+[GameEndTime "2026-03-22T23:14:07 -0600"]
+[PlyCount "1"]
+[Termination "time forfeit"]
+[WhiteTimeControl "10/move"]
+[BlackTimeControl "10/move"]
+[ECO "B00"]
+[Opening "King's Pawn Game"]
+
+1. e4 {+0.26/3 16.989s, White loses on time} 0-1
+
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.22"]
+[Round "1"]
+[White "Stockfish17-1500"]
+[Black "NexusChess"]
+[Result "1-0"]
+[GameDuration "00:00:26"]
+[GameStartTime "2026-03-22T23:14:07 -0600"]
+[GameEndTime "2026-03-22T23:14:35 -0600"]
+[PlyCount "1"]
+[Termination "time forfeit"]
+[WhiteTimeControl "10/move"]
+[BlackTimeControl "10/move"]
+[ECO "A00"]
+[Opening "Van't Kruijs Opening"]
+
+1. e3 {+0.24/29 10.000s, Black loses on time} 1-0
+
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.22"]
+[Round "1"]
+[White "NexusChess"]
+[Black "Stockfish17-1500"]
+[Result "0-1"]
+[GameDuration "00:11:54"]
+[GameStartTime "2026-03-22T23:18:48 -0600"]
+[GameEndTime "2026-03-22T23:30:46 -0600"]
+[PlyCount "82"]
+[Termination "normal"]
+[WhiteTimeControl "5/move"]
+[BlackTimeControl "5/move"]
+[ECO "A00"]
+[Opening "Amar Opening"]
+
+1. Nh3 {+0.32/3 12.770s} c6 {+0.56/26 5.000s} 2. c3 {+0.03/3 12.112s}
+Nf6 {+0.52/28 4.999s} 3. b4 {-0.26/3 12.633s} d5 {+1.44/25 4.999s}
+4. Ng5 {-0.67/4 12.123s} e5 {+1.73/26 4.999s} 5. Nxh7 {-0.40/3 11.895s}
+Rxh7 {+4.92/23 4.999s} 6. d4 {-2.82/4 12.744s} exd4 {+4.82/22 4.999s}
+7. Qxd4 {-2.42/3 13.268s} Rh5 {+5.03/20 4.999s} 8. h4 {-2.89/2 11.473s}
+Be7 {+4.95/22 4.999s} 9. Be3 {-2.18/3 11.554s} c5 {+5.19/21 5.000s}
+10. bxc5 {-1.11/4 11.918s} Qa5 {+4.64/23 4.999s} 11. a4 {-1.18/3 11.871s}
+Na6 {+5.10/22 4.999s} 12. c6 {-2.55/3 12.308s} bxc6 {+4.74/23 4.999s}
+13. Qd1 {-1.96/3 12.634s} Nc5 {+4.81/23 4.999s} 14. Bd4 {-2.74/2 12.793s}
+Qc7 {+5.00/23 4.999s} 15. e3 {+0.56/2 12.571s} Rh8 {+4.65/22 4.999s}
+16. c4 {-2.46/1 12.730s} Ne6 {+4.78/22 4.999s} 17. Bc3 {-2.58/1 10.754s}
+Rb8 {+4.83/22 5.000s} 18. Bxf6 {-2.28/3 12.472s} gxf6 {+5.54/25 4.999s}
+19. Nc3 {-2.54/3 13.598s} Qe5 {+6.17/24 4.999s} 20. Rc1 {-2.51/3 12.671s}
+Bb4 {+6.37/25 4.999s} 21. cxd5 {-3.63/1 12.236s} Bd7 {+13.90/27 4.999s}
+22. dxe6 {+0.06/1 12.794s} Bxc3+ {+6.51/26 4.999s} 23. Ke2 {-0.83/1 11.555s}
+Bc8 {+7.36/27 4.999s} 24. f4 {-0.24/3 12.115s} Rb2+ {+8.02/26 5.000s}
+25. Rc2 {-1.92/3 12.940s} Qxe6 {+10.12/25 4.999s} 26. Kf2 {-1.06/3 12.632s}
+Qg4 {+4.00/24 4.999s} 27. Qxg4 {-0.70/2 12.484s} Rxc2+ {+3.49/25 4.999s}
+28. Qe2 {-0.46/1 12.999s} Rd2 {+3.72/26 4.999s} 29. Kg3 {-0.23/4 12.456s}
+Rxe2 {+3.82/26 4.999s} 30. Bxe2 {-0.74/4 12.626s} Kf8 {+4.11/27 4.999s}
+31. Rd1 {-0.05/1 12.626s} c5 {+4.35/25 4.999s} 32. Kf3 {+0.42/4 12.471s}
+Ke7 {+4.63/24 4.999s} 33. Ke4 {+1.66/3 12.664s} Rxh4 {+5.14/26 4.999s}
+34. g3 {-1.89/5 11.928s} Rh2 {+5.51/26 5.000s} 35. Kf3 {-3.14/4 12.510s}
+f5 {+7.24/25 4.999s} 36. Bd3 {-2.95/2 12.311s} Bb7+ {+8.09/24 4.999s}
+37. e4 {-2.94/1 12.737s} Bb4 {+8.75/24 4.999s} 38. Ke3 {-2.84/2 12.357s}
+Bc3 {+7.21/26 4.999s} 39. Kf3 {0.00/10 11.764s} Bd4 {+7.99/22 5.000s}
+40. Rf1 {-4.60/4 12.791s} c4 {+10.41/22 4.999s} 41. Bxc4 {-4.06/1 13.082s}
+Bxe4# {+M1/28 4.999s, Black mates} 0-1
+
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.22"]
+[Round "1"]
+[White "Stockfish17-1500"]
+[Black "NexusChess"]
+[Result "1-0"]
+[GameDuration "00:07:13"]
+[GameStartTime "2026-03-22T23:30:46 -0600"]
+[GameEndTime "2026-03-22T23:38:01 -0600"]
+[PlyCount "50"]
+[Termination "adjudication"]
+[WhiteTimeControl "5/move"]
+[BlackTimeControl "5/move"]
+[ECO "C25"]
+[Opening "Vienna Game"]
+
+1. e4 {+0.32/28 4.999s} e5 {0.00/1 12.886s} 2. Nc3 {+0.24/26 4.999s}
+c5 {+0.17/1 13.015s} 3. Bb5 {+0.80/28 5.000s} Qg5 {+1.51/2 12.128s}
+4. Kf1 {+2.07/27 5.000s} Ne7 {+0.67/3 12.149s} 5. d4 {+2.99/29 4.999s}
+Qf6 {-0.99/3 12.925s} 6. d5 {+3.43/26 4.999s} a5 {-0.61/3 12.586s}
+7. Nf3 {+3.15/26 4.999s} h6 {-0.39/3 12.922s} 8. Ke1 {+3.29/26 5.000s}
+c4 {-0.39/1 12.368s} 9. Be3 {+3.25/25 4.999s} Ng6 {-0.37/1 12.458s}
+10. h4 {+3.33/25 5.000s} a4 {-1.86/3 12.123s} 11. d6 {+3.85/25 5.000s}
+Bxd6 {+0.36/3 12.248s} 12. Nd5 {+3.85/25 4.999s} Qd8 {+0.34/3 13.696s}
+13. Bb6 {+5.70/24 4.999s} Rg8 {+1.94/3 12.239s} 14. Bxd8 {+6.85/25 4.999s}
+Kxd8 {-7.07/6 11.984s} 15. c3 {+6.75/25 5.000s} Ke8 {-6.48/4 12.361s}
+16. Nd4 {+7.47/26 4.999s} Rh8 {-4.32/3 12.715s} 17. h5 {+7.64/25 4.999s}
+exd4 {-5.55/4 12.284s} 18. hxg6 {+6.91/26 4.999s} fxg6 {-6.38/3 13.170s}
+19. Qxd4 {+8.58/25 4.999s} a3 {-6.20/1 11.159s} 20. Rb1 {+M19/26 4.999s}
+axb2 {-5.92/3 12.222s} 21. Qxg7 {+M13/26 4.999s} Rg8 {-8.37/3 12.802s}
+22. Qxg8+ {+M7/59 5.000s} Bf8 {-15.17/4 12.177s} 23. Rxb2 {+M5/245 0.569s}
+Ra6 {-14.61/4 12.734s} 24. f4 {+M9/70 4.999s} Rd6 {-14.39/4 12.788s}
+25. Bxc4 {+M11/41 4.999s} Nc6 {-13.66/1 13.144s, White wins by adjudication} 1-0
+
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.22"]
+[Round "2"]
+[White "NexusChess"]
+[Black "Stockfish17-1500"]
+[Result "0-1"]
+[GameDuration "00:08:09"]
+[GameStartTime "2026-03-22T23:38:01 -0600"]
+[GameEndTime "2026-03-22T23:46:11 -0600"]
+[PlyCount "56"]
+[Termination "normal"]
+[WhiteTimeControl "5/move"]
+[BlackTimeControl "5/move"]
+[ECO "D02"]
+[Opening "Queen's Pawn Game: Zukertort Variation"]
+
+1. d4 {+0.69/1 13.567s} d5 {-0.24/28 4.999s} 2. Nf3 {0.00/4 11.549s}
+e6 {-0.22/27 5.000s} 3. c3 {+0.13/4 12.462s} h6 {-0.09/27 5.000s}
+4. Bf4 {+0.05/4 13.655s} Nf6 {-0.26/27 4.999s} 5. h4 {+0.31/5 12.493s}
+Bd7 {+0.09/28 5.000s} 6. Qb3 {+0.66/3 13.082s} Nc6 {+0.18/27 4.999s}
+7. Qxb7 {+0.50/1 13.304s} Bd6 {+0.60/25 4.999s} 8. Bxd6 {+0.39/2 11.892s}
+cxd6 {+0.61/26 4.999s} 9. h5 {+2.89/3 13.013s} Rb8 {+2.13/27 4.999s}
+10. Qa6 {-0.88/3 11.885s} O-O {+1.97/27 4.999s} 11. b4 {+1.25/3 12.397s}
+Rxb4 {+2.31/27 4.999s} 12. Qc8 {+3.97/3 12.907s} Qb6 {+7.78/25 4.999s}
+13. Qxf8+ {-1.03/2 12.738s} Kxf8 {+5.75/24 4.999s} 14. cxb4 {-1.03/1 12.346s}
+Nxd4 {+7.45/25 5.000s} 15. Nxd4 {-1.03/1 12.713s} Qxb4+ {+8.25/26 4.999s}
+16. Nd2 {-2.15/4 11.941s} Qxd4 {+5.01/25 4.999s} 17. Rb1 {-1.89/1 12.381s}
+Ne4 {+5.26/23 4.999s} 18. Rb8+ {-1.91/4 12.212s} Ke7 {+6.82/26 4.999s}
+19. Nxe4 {-1.71/3 12.653s} Qa1+ {+6.92/24 4.999s} 20. Kd2 {-2.40/4 13.334s}
+Qd4+ {+6.85/24 4.999s} 21. Kc2 {-2.26/1 12.737s} Ba4+ {+6.56/25 4.999s}
+22. Kb1 {-2.25/1 12.529s} dxe4 {+6.76/25 4.999s} 23. Rh8 {-2.36/3 12.287s}
+Qxf2 {+M7/81 4.999s} 24. Rg8 {-3.86/1 12.947s} Qe1+ {+M9/34 4.999s}
+25. Kb2 {-4.44/4 12.520s} Qb4+ {+M7/26 4.999s} 26. Kc1 {-M1006/5 12.051s}
+Qa3+ {+M5/177 4.999s} 27. Kd2 {-4.33/3 13.113s} e3+ {+M3/25 4.999s}
+28. Ke1 {-M1002/13 13.435s} Qc1# {+M1/245 0.006s, Black mates} 0-1
+
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.22"]
+[Round "2"]
+[White "Stockfish17-1500"]
+[Black "NexusChess"]
+[Result "1-0"]
+[GameDuration "00:07:00"]
+[GameStartTime "2026-03-22T23:46:11 -0600"]
+[GameEndTime "2026-03-22T23:53:12 -0600"]
+[PlyCount "49"]
+[Termination "normal"]
+[WhiteTimeControl "5/move"]
+[BlackTimeControl "5/move"]
+[ECO "A43"]
+[Opening "Benoni Defense: Old Benoni"]
+
+1. d4 {+0.31/29 4.999s} c5 {-0.24/4 13.799s} 2. d5 {+0.71/27 5.000s}
+e6 {-0.33/4 13.028s} 3. c4 {+0.76/26 5.000s} a5 {-0.39/1 12.903s}
+4. e4 {+1.51/27 5.000s} Ne7 {-0.66/3 12.525s} 5. Nc3 {+1.89/26 4.999s}
+Ng6 {-1.06/3 12.900s} 6. f4 {+2.61/26 4.999s} h5 {-1.01/4 12.908s}
+7. Be2 {+3.19/26 4.999s} exd5 {-0.83/4 12.588s} 8. cxd5 {+2.74/26 4.999s}
+Bd6 {-0.68/1 12.825s} 9. e5 {+4.57/24 4.999s} Bc7 {-0.82/1 12.970s}
+10. Qc2 {+5.43/25 4.999s} Nh4 {-1.05/4 13.013s} 11. g3 {+4.52/23 5.000s}
+Rg8 {-0.82/3 12.648s} 12. gxh4 {+5.91/24 4.999s} Qxh4+ {-2.74/3 12.568s}
+13. Kd2 {+5.96/24 4.999s} Qxf4+ {+0.45/4 13.005s} 14. Kd1 {+6.43/26 4.999s}
+Qxe5 {+0.42/4 12.762s} 15. Qh7 {+6.35/26 4.999s} Rf8 {-0.53/3 13.024s}
+16. Nf3 {+7.21/25 4.999s} Qe7 {+0.31/1 12.445s} 17. Bg5 {+7.42/25 4.999s}
+f6 {-0.55/1 13.149s} 18. Bd3 {+6.92/25 4.999s} fxg5 {+3.19/1 12.690s}
+19. Re1 {+7.03/26 4.999s} Be5 {-1.16/3 12.107s} 20. Nxe5 {+9.06/25 4.999s}
+d6 {-2.20/3 13.361s} 21. Ng6 {+8.21/24 5.000s} Rh8 {-0.16/3 13.569s}
+22. Qxh8+ {+M3/57 4.999s} Kf7 {-M1004/5 12.902s} 23. Rxe7+ {+M3/245 0.317s}
+Kf6 {-M1002/1 13.600s} 24. Kc2 {+M1/245 0.033s} c4 {-17.37/1 12.379s}
+25. Qf8# {+M1/245 0.005s, White mates} 1-0
+

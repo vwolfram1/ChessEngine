@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NexusChess</title>
+<link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<header class="topbar">
+  <div class="logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <circle cx="14" cy="14" r="13" stroke="url(#lg)" stroke-width="2"/>
+      <path d="M9 20 L14 8 L19 20" stroke="url(#lg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10.5 16.5 H17.5" stroke="url(#lg)" stroke-width="1.5" stroke-linecap="round"/>
+      <defs>
+        <linearGradient id="lg" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a78bfa"/>
+          <stop offset="100%" stop-color="#60a5fa"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <span class="logo-text">NexusChess</span>
+  </div>
+  <div class="topbar-controls">
+    <button class="btn-ghost" onclick="newGame()">New Game</button>
+    <button class="btn-ghost" onclick="undoMove()">Undo</button>
+    <button class="btn-ghost" onclick="flipBoard()">Flip Board</button>
+    <label class="toggle-label">
+      <span>Engine</span>
+      <input type="checkbox" id="engineToggle" checked onchange="toggleEngine()"/>
+      <span class="toggle-switch"></span>
+    </label>
+  </div>
+</header>
+
+<main class="layout">
+  <!-- Left panel -->
+  <aside class="panel left-panel">
+    <div class="card eval-card">
+      <div class="card-title">EVALUATION</div>
+      <div class="eval-bar-wrap">
+        <div class="eval-bar-track">
+          <div class="eval-bar-fill" id="evalBar"></div>
+          <div class="eval-bar-label white-label" id="evalLabelW">+0.0</div>
+          <div class="eval-bar-label black-label" id="evalLabelB"></div>
+        </div>
+      </div>
+      <div class="eval-value" id="evalValue">0.00</div>
+      <div class="eval-depth" id="evalDepth">depth —</div>
+    </div>
+
+    <div class="card engine-card">
+      <div class="card-title">ENGINE ANALYSIS</div>
+      <div class="engine-line" id="enginePV">Waiting...</div>
+      <div class="engine-stats" id="engineStats"></div>
+    </div>
+
+    <div class="card settings-card">
+      <div class="card-title">SETTINGS</div>
+      <div class="setting-row">
+        <label>Think time</label>
+        <input type="range" id="thinkTime" min="0.5" max="30" step="0.5" value="5"
+               oninput="document.getElementById('thinkTimeVal').textContent=this.value+'s'"/>
+        <span id="thinkTimeVal">5s</span>
+      </div>
+      <div class="setting-row">
+        <label>Max depth</label>
+        <input type="range" id="maxDepth" min="1" max="40" step="1" value="25"
+               oninput="document.getElementById('maxDepthVal').textContent=this.value"/>
+        <span id="maxDepthVal">25</span>
+      </div>
+      <div class="setting-row">
+        <label>Play as</label>
+        <select id="playAs" onchange="setPlayAs()">
+          <option value="white">White</option>
+          <option value="black">Black</option>
+          <option value="both">Both (Analysis)</option>
+        </select>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Center: board -->
+  <section class="board-section">
+    <div class="board-wrap">
+      <div class="rank-labels" id="rankLabels"></div>
+      <div class="board-column">
+        <div class="board-grid" id="boardGrid"></div>
+        <div class="file-labels" id="fileLabels"></div>
+      </div>
+    </div>
+    <div class="status-bar" id="statusBar">
+      <span id="turnIndicator"></span>
+      <span id="gameStatus"></span>
+    </div>
+  </section>
+
+  <!-- Right panel -->
+  <aside class="panel right-panel">
+    <div class="card moves-card">
+      <div class="card-title">MOVES</div>
+      <div class="moves-list" id="movesList"></div>
+    </div>
+
+    <div class="card graph-card">
+      <div class="card-title">EVALUATION HISTORY</div>
+      <canvas id="evalGraph" width="280" height="130"></canvas>
+    </div>
+  </aside>
+</main>
+
+<!-- Promotion dialog -->
+<div class="modal-overlay" id="promoModal" style="display:none">
+  <div class="modal-box">
+    <div class="modal-title">Choose Promotion</div>
+    <div class="promo-choices" id="promoChoices"></div>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

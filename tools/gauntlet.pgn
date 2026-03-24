@@ -1,0 +1,44 @@
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.22"]
+[Round "1"]
+[White "NexusChess"]
+[Black "SF_1000"]
+[Result "0-1"]
+[SetUp "1"]
+[FEN "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1"]
+[GameDuration "14:31:21"]
+[GameStartTime "2026-03-22T23:55:32 -0600"]
+[GameEndTime "2026-03-23T14:26:58 -0600"]
+[PlyCount "7"]
+[Termination "time forfeit"]
+[WhiteTimeControl "5/move"]
+[BlackTimeControl "5/move"]
+[ECO "C50"]
+[Opening "Four Knights Game: Italian Variation"]
+
+1. Nc3 {+0.20/1 13.004s} Bc5 {+0.08/26 5.000s} 2. O-O {-0.06/4 11.715s}
+Rb8 {-0.11/27 4.999s} 3. Bxf7+ {+0.36/4 12.921s} Kxf7 {+2.45/27 4.999s}
+4. Nh4 {-1.97/3 52228.549s, White loses on time} 0-1
+
+[Event "Fastchess Tournament"]
+[Site "?"]
+[Date "2026.03.23"]
+[Round "1"]
+[White "SF_1000"]
+[Black "NexusChess"]
+[Result "0-1"]
+[SetUp "1"]
+[FEN "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1"]
+[GameDuration "00:00:05"]
+[GameStartTime "2026-03-23T14:26:58 -0600"]
+[GameEndTime "2026-03-23T14:27:04 -0600"]
+[PlyCount "1"]
+[Termination "time forfeit"]
+[WhiteTimeControl "5/move"]
+[BlackTimeControl "5/move"]
+[ECO "C55"]
+[Opening "Italian Game: Two Knights Defense"]
+
+1. Qe2 {+0.21/25 5.003s, White loses on time} 0-1
+

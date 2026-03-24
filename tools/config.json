@@ -1,0 +1,153 @@
+{
+    "resign": {
+        "move_count": 5,
+        "score": 700,
+        "twosided": false,
+        "enabled": true
+    },
+    "draw": {
+        "move_number": 60,
+        "move_count": 8,
+        "score": 10,
+        "enabled": true
+    },
+    "maxmoves": {
+        "move_count": 1,
+        "enabled": false
+    },
+    "tb_adjudication": {
+        "syzygy_dirs": "",
+        "max_pieces": 0,
+        "ignore_50_move_rule": false,
+        "enabled": false
+    },
+    "opening": {
+        "file": "openings.epd",
+        "format": 0,
+        "order": 1,
+        "plies": -1,
+        "start": 1
+    },
+    "pgn": {
+        "additional_lines_rgx": [],
+        "event_name": "Fastchess Tournament",
+        "site": "?",
+        "file": "games/nexus_vs_gochess_v3.pgn",
+        "notation": 0,
+        "append_file": true,
+        "track_nodes": false,
+        "track_seldepth": false,
+        "track_nps": false,
+        "track_hashfull": false,
+        "track_tbhits": false,
+        "track_timeleft": false,
+        "track_latency": false,
+        "track_pv": false,
+        "min": false,
+        "crc": false
+    },
+    "epd": {
+        "file": "",
+        "append_file": true
+    },
+    "sprt": {
+        "alpha": 0.0,
+        "beta": 0.0,
+        "elo0": 0.0,
+        "elo1": 0.0,
+        "model": "normalized",
+        "enabled": false
+    },
+    "config_name": "config.json",
+    "output": 0,
+    "seed": 4137755910069911740,
+    "variant": 0,
+    "type": 0,
+    "gauntlet_seeds": 1,
+    "ratinginterval": 10,
+    "scoreinterval": 1,
+    "wait": 0,
+    "autosaveinterval": 20,
+    "games": 2,
+    "rounds": 2,
+    "concurrency": 1,
+    "force_concurrency": false,
+    "recover": false,
+    "noswap": false,
+    "reverse": false,
+    "report_penta": true,
+    "affinity": false,
+    "show_latency": false,
+    "log": {
+        "file": "",
+        "level": 2,
+        "append_file": true,
+        "compress": false,
+        "realtime": true,
+        "engine_coms": false
+    },
+    "engines": [
+        {
+            "name": "NexusChess",
+            "dir": "",
+            "cmd": "c:/Users/vinni/OneDrive/Documents/Projects/ChessEngine/nexuschess.bat",
+            "args": "",
+            "restart": false,
+            "options": [
+                [
+                    "Threads",
+                    "1"
+                ],
+                [
+                    "Hash",
+                    "256"
+                ]
+            ],
+            "limit": {
+                "tc": {
+                    "increment": 0,
+                    "fixed_time": 5000,
+                    "time": 0,
+                    "moves": 0,
+                    "timemargin": 5000
+                },
+                "nodes": 0,
+                "plies": 0
+            },
+            "variant": 0
+        },
+        {
+            "name": "GoChess",
+            "dir": "",
+            "cmd": "c:/Users/vinni/OneDrive/Documents/Projects/go-chess/go-api/go-chess.exe",
+            "args": "uci",
+            "restart": false,
+            "options": [],
+            "limit": {
+                "tc": {
+                    "increment": 1000,
+                    "fixed_time": 0,
+                    "time": 60000,
+                    "moves": 0,
+                    "timemargin": 0
+                },
+                "nodes": 0,
+                "plies": 0
+            },
+            "variant": 0
+        }
+    ],
+    "stats": {
+        "NexusChess vs GoChess": {
+            "wins": 0,
+            "losses": 3,
+            "draws": 1,
+            "penta_WW": 0,
+            "penta_WD": 0,
+            "penta_WL": 0,
+            "penta_DD": 0,
+            "penta_LD": 1,
+            "penta_LL": 1
+        }
+    }
+}
